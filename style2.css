@@ -1,0 +1,215 @@
+.container {
+    display: block;
+    position: relative;
+    padding-right: 20px;
+    margin-right: 23px;
+    margin-bottom: 35px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    border-radius: 10%;
+    background-color: greenyellow;
+    text-align: right;
+    vertical-align: bottom;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    border: 2px solid dodgerblue;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: orange;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+#fusoliera{
+    /*border-left: 1px solid black;*/
+    border-right: 5px solid darkgray;
+    border-left:  5px solid darkgray;
+    padding-left: 15px;
+    padding-right:30px;
+}
+
+#corridoio{
+    padding-right: 40px;
+}
+
+#title_bar{
+    display: block;
+    overflow: visible;
+    position: fixed;
+    background: dodgerblue;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    vertical-align: center;
+    z-index:300;
+}
+
+#menu{
+    position: fixed;
+    margin-top: 100px;
+    z-index:200;
+
+}
+
+#aereo{
+    position: absolute;
+    margin-top: 110px;
+    margin-left: 200px;
+    z-index:100;
+    width: 100%;
+    alignment: center;
+
+}
+
+body{
+    background: white;
+    font-family: Arial, sans-serif;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.close {
+    color: #ffffff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.loginInput{
+    display: block;
+    margin: 5px;
+}
+
+#login{
+    text-align: center;
+    width: 100%;
+}
+
+#loginBtn{
+    float: right;
+    margin-right: 2%;
+    margin-top: -30px;
+}
+
+button, input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+}
+
+#registerBtn, #registrazioneBtn{
+    width: 100%;
+    background: orangered;
+}
+
+#submitBtn {
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 0;
+    /*border: 1px solid #888;*/
+    width: 400px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+/* Modal Body */
+.modal-body {padding: 2px 16px;}
