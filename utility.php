@@ -24,7 +24,7 @@ function  login(){
     //todo: Devo sanitizzare o no??
 //    $username = my_sanitize($insecure_username);
     $username = mysqli_real_escape_string($conn, $insecure_username);
-    $query = "SELECT * FROM Users WHERE username=" . $username . " AND password=" . $password;
+    $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
     if(! $reply = mysqli_query($conn, $query))
         my_redirect("Errore collegamento al DB");
     if(mysqli_num_rows($reply)==0){
@@ -39,14 +39,13 @@ function  login(){
         my_redirect("Utente o password errata");
     }
     mysqli_close($conn);
-    session_start();
-    $_SESSION['user'] = $username;
+    $_SESSION['username'] = $username;
 }
 
 function my_redirect($mex){
     //todo: rimettere header.. Non worka bene, perchè??
 //    header('HTTP/1.1 307 temporary redirect');
-    header("Location: index.php?msg=".urlencode($mex));
+    header("Location: index.php?mex=".urlencode($mex));
     exit;
 }
 
@@ -64,7 +63,8 @@ function user_exist(){
 }
 
 function registration(){
-
+    echo "registration";
+    exit;
 }
 
 function do_action(){

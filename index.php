@@ -14,14 +14,21 @@
 
 <?php
     include "utility.php";
+    session_start();
     do_action();
+    session_write_close();
 
 ?>
 <header id="title_bar">
     <h1>Seleziona un posto</h1>
-    <button id="loginBtn">Login</button>
-
-    <!-- Bottone login -->
+    <?php
+    if(!isset($_SESSION['username']))
+        echo "<button id='loginBtn'>Login</button>";
+    else{
+        echo "<button id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>";
+    }
+    ?>
+    <!-- Modal Bottone login -->
     <div id="login" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,11 +44,13 @@
             </form>
                 <button id="registrazioneBtn">Non sei registrato?</button>
             </div>
+
             <div class="modal-body" id="modalRegistrazione">
                 <form id="formRegistrazione">
                     <input class="loginInput" type="text" name="username" placeholder="Inserisci username" id="username">
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password"  id="password">
                     <input class="loginInput" type="password" name="password_retype" placeholder="Riscrivi password"  id="password_retype">
+                    <input type="hidden" name="action" value="registration">
                     <input class="loginInput" type="submit" id="registerBtn" value="Registrati">
                 </form>
             </div>
@@ -55,7 +64,6 @@
         const btnLogin = document.getElementById("loginBtn");
         const btnRegistrazione = document.getElementById("registrazioneBtn");
         const span = document.getElementsByClassName("close")[0];
-
         btnLogin.onclick = function() {
             modal.style.display = "block";
             modalLogin.style.display = "block";
@@ -87,6 +95,13 @@
 
 <aside id="menu">
     <p>Menu</p>
+    <?php
+    //todo: scopo debug
+    if(isset($_GET['mex']))
+        echo $_GET['mex'];
+    if(isset($_SESSION['username']))
+        echo "<p>User: ".$_SESSION['username']."</p>";
+    ?>
 </aside>
 <section id="aereo">
 
@@ -94,7 +109,7 @@
             <?php
         //la larghezza deve essere un numero pari
         $larghezza = 6;
-        $lunghezza = 30;
+        $lunghezza = 10;
         for($y=1; $y<=$lunghezza; $y++){
             echo "<tr class='sedili'>\n";
             for($x=0; $x<$larghezza+1; $x++){

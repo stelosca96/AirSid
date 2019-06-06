@@ -154,6 +154,13 @@ body{
     margin-top: -30px;
 }
 
+#logoutBtn{
+    float: right;
+    background: orangered;
+    margin-right: 2%;
+    margin-top: -30px;
+}
+
 button, input[type=submit] {
     background-color: #4CAF50;
     color: white;
