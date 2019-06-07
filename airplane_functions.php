@@ -46,9 +46,11 @@ function booking(){
 
         foreach ($reserved as $sID){
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
-            echo $query."<br>";
-            if(!mysqli_query($conn,$query))
+            if(!mysqli_query($conn, $query))
                 throw new Exception("Query $sID fallita");
+            if(mysqli_affected_rows($conn)==0)
+                throw new Exception("Il posto $sID è assegnato ad un altro utente (2)");
+
         }
         if (!mysqli_commit($conn))
             throw new Exception("Commit fallito");
@@ -56,6 +58,8 @@ function booking(){
     }catch (Exception $e){
         mysqli_rollback($conn);
         //todo: scopo debug
+        mysqli_autocommit($conn,true);
+
         echo "Rollback ".$e->getMessage();
     }
     mysqli_autocommit($conn,true);
@@ -120,6 +124,8 @@ function style_color($sID, $res){
 }
 
 function is_checked($sID, $res){
+    if(!isset($_SESSION["username"]))
+        return "";
     if(isset($res[$sID]))
         $data = $res[$sID];
         if(isset($data) && $data["user"]==$_SESSION["username"]  && $data["state"]!="busy")
