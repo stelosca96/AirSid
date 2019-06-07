@@ -2,7 +2,7 @@
 include "utility.php";
 
 function do_action(){
-    var_dump($_REQUEST);
+    //var_dump($_REQUEST);
     if(isset($_REQUEST['action'])) {
         switch ($_REQUEST['action']) {
             case "login":
@@ -63,11 +63,6 @@ function booking(){
         echo "Rollback ".$e->getMessage();
     }
     mysqli_autocommit($conn,true);
-
-
-
-
-
 }
 
 function delete_reservations(){

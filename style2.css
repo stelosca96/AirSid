@@ -30,7 +30,6 @@
     text-align: right;
     vertical-align: bottom;
     color: white;
-    font-family: Arial, sans-serif;
 }
 
 /* On mouse-over, add a grey background color */
@@ -74,6 +73,7 @@
 
 #fusoliera{
     /*border-left: 1px solid black;*/
+    background: #fefefe;
     border-right: 5px solid darkgray;
     border-left:  5px solid darkgray;
     padding-bottom: 40px;
@@ -95,38 +95,77 @@
     padding-right: 40px;
 }
 
-#title_bar{
-    display: block;
+header{
+
+    height: 350px;
     overflow: visible;
-    position: fixed;
-    background: dodgerblue;
-    height: 100px;
-    width: 100%;
+    /*background: yellow url("https://wetu.com/Resources/46257/Antarctica_2.jpg") no-repeat center;*/
+    /*background: yellow url("https://www.bauerkg.de/images/pictures/w7e0505112a3b002a0814ce3b4387ddf/Fotolia_19279258_XXL.jpg") no-repeat center;*/
+    /*background: yellow url("https://images.unsplash.com/photo-1509803874385-db7c23652552?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80") no-repeat center;*/
+    background: yellow url("sfondo_sid_airlines.jpg") no-repeat center;
+    background-size: cover;
     text-align: center;
-    vertical-align: center;
-    z-index:300;
+    vert-align: middle;
+    display: grid;
+    place-items: center;
+    /*position: fixed;*/
+    /*background: dodgerblue;*/
+    /*height: 100px;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*z-index:300;*/
 }
 
-#menu{
-    position: fixed;
-    margin-top: 100px;
-    z-index:200;
+h1 {
+    filter: none;
+    font-size: 4.5vw;
+    font-weight: bolder;
+    text-transform: uppercase;
+    letter-spacing: 0.8em;
+    color: transparent;
+    -webkit-text-stroke: 3px #ffffff;
+}
 
+h1:hover{
+    font-size: 4.8vw;
+    -webkit-text-stroke: 4px #ffffff;
+
+}
+
+aside{
+    float: left;
+    width: 20%;
+    padding-top: 5%;
+    height: 100%;
+    margin-right: 5%;
+    background-color: #067BC2;
+}
+
+section{
+    float: right;
+    width: 75%;
+    alignment: center;
+    /*position: absolute;*/
+    /*margin-top: 110px;*/
+    /*margin-left: 200px;*/
+    /*z-index:100;*/
+    /*width: 100%;*/
+    /*alignment: center;*/
 }
 
 #aereo{
-    position: absolute;
-    margin-top: 110px;
-    margin-left: 200px;
-    z-index:100;
-    width: 100%;
-    alignment: center;
-
+    margin-top: 50px;
+}
+html, body{
+    height: 100%;
 }
 
 body{
-    background: white;
-    font-family: Arial, sans-serif;
+    background: #262626;
+    color: #FDFFFC;
+    padding: 0;
+    margin: 0;
+    font-family: Gotham, Arial, sans-serif;
 }
 
 /* The Modal (background) */
@@ -168,20 +207,35 @@ body{
 }
 
 #loginBtn{
-    float: right;
+    position: center;
     margin-right: 2%;
-    margin-top: -30px;
 }
 
 #logoutBtn{
-    float: right;
+    position: center;
     background: orangered;
     margin-right: 2%;
-    margin-top: -30px;
+}
+
+.menuBtn{
+    display: block;
+    text-align: center;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#username{
+    background-color: gold;
+    padding-top: 10px;
+    color: white;
+    padding-bottom: 10px;
+    border: none;
+    cursor: default;
 }
 
 button, input[type=submit] {
-    background-color: #4CAF50;
+    background-color: #64dd17;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -191,7 +245,7 @@ button, input[type=submit] {
 
 #registerBtn, #registrazioneBtn{
     width: 100%;
-    background: orangered;
+    background: #F2545B;
 }
 
 #submitBtn {
@@ -214,7 +268,7 @@ input[type=text], input[type=password] {
 /* Modal Header */
 .modal-header {
     padding: 2px 16px;
-    background-color: #4CAF50;
+    background-color: #067BC2;
     color: white;
 }
 
@@ -239,7 +293,3 @@ input[type=text], input[type=password] {
 
 /* Modal Body */
 .modal-body {padding: 2px 16px;}
-
-h1{
-    color: white;
-}

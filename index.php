@@ -13,7 +13,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Air Sid</title>
+    <title>Sid Airline</title>
     <script type="text/javascript">
         function load_seat_state(sID) {
             function set_red(sID) {
@@ -75,14 +75,24 @@
     </script>
 </head>
 <body>
+<header>
+    <h1>Sid Airline</h1>
+</header>
 
-<header id="title_bar">
-    <h1>Sid Airlines</h1>
+<aside id="menu">
     <?php
-    if(!isset($_SESSION['username']))
-        echo "<button id='loginBtn'>Login</button>";
+    //todo: scopo debug
+    if(isset($_GET['mex']))
+        echo $_GET['mex'];
+    if(!logged())
+        echo "<button class='menuBtn' id='loginBtn'>Login</button>";
     else{
-        echo "<button id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>";
+        echo "<span class='menuBtn' id='username'>".$_SESSION['username']."</span>
+              <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
+              <form action='index.php'>
+              <button type='submit' name='action' class='menuBtn' value='refresh'>Aggiorna</button>
+              <button type='submit' name='action' class='menuBtn' value='delete_reservations'>Cancella prenotazioni</button>
+              </form>";
     }
     ?>
     <!-- Modal Bottone login -->
@@ -93,12 +103,12 @@
                 <h2 id="modalTitle"></h2>
             </div>
             <div class="modal-body" id="modalLogin">
-            <form id="formLogin" method="post" action="index.php">
-                <input class="loginInput" type="text" name="username" placeholder="Inserisci username" id="username">
-                <input class="loginInput" type="password" name="password" placeholder="Inserisci password" id="password">
-                <input type="hidden" name="action" value="login">
-                <input class="loginInput" type="submit" id="submitBtn" value="Accedi">
-            </form>
+                <form id="formLogin" method="post" action="index.php">
+                    <input class="loginInput" type="text" name="username" placeholder="Inserisci username" id="username">
+                    <input class="loginInput" type="password" name="password" placeholder="Inserisci password" id="password">
+                    <input type="hidden" name="action" value="login">
+                    <input class="loginInput" type="submit" id="submitBtn" value="Accedi">
+                </form>
                 <button id="registrazioneBtn">Non sei registrato?</button>
             </div>
 
@@ -145,30 +155,31 @@
             }
         }
     </script>
-</header>
 
-
-<aside id="menu">
-    <p>Menu</p>
-    <?php
-    //todo: scopo debug
-    if(isset($_GET['mex']))
-        echo $_GET['mex'];
-    if(isset($_SESSION['username']))
-        echo "<p>User: ".$_SESSION['username']."</p>";
-    ?>
 </aside>
 <section id="aereo">
-    <form action="index.php" method="post">
-        <?php
-        if(logged())
-            echo "<!--        <input type=\"hidden\" value=\"booking\">-->
-            <button type='submit' name='action' value='refresh'>Aggiorna</button>
-            <button type='submit' name='action' value='delete_reservations'>Cancella prenotazioni</button>
-            <button type='submit' name='action' value='booking'>Prenota</button>";
 
-        ?>
-
+    <?php
+    $res = load_all_seats();
+    //la larghezza deve essere un numero pari
+    $larghezza = 6;
+    $lunghezza = 10;
+    $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
+    echo '<table>
+                <tr>
+                    <th>Posti totali</th>
+                    <th>Posti occupati</th>
+                    <th>Posti prenotati</th>
+                    <th>Posti liberi</th>
+                 </tr>
+                 <tr>
+                    <td>'.$stats["total"].'</td>
+                    <td>'.$stats["busy"].'</td>
+                    <td>'.$stats["reserved"].'</td>
+                    <td>'.$stats["free"].'</td>
+                  </tr>
+               </<table>';
+    ?>
 <!--     todo: da valutare se fare la fusoliera in orizzontale   -->
 <!--        <table id="fusoliera2">-->
 <!--            --><?php
@@ -200,13 +211,10 @@
 //                echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\");</script>";
 //            ?>
 <!--        </table>-->
+
+    <form action="index.php" method="post">
     <table id="fusoliera">
         <?php
-        //la larghezza deve essere un numero pari
-        $res = load_all_seats();
-        $larghezza = 6;
-        $lunghezza = 10;
-        var_dump(total_busy_reserved_count($larghezza, $lunghezza, $res));
         for($y=1; $y<=$lunghezza; $y++){
             echo "<tr class='sedili'>\n";
             for($x=0; $x<$larghezza; $x++){
@@ -223,9 +231,12 @@
             echo "</tr>\n";
         }
 
-        //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
-        if(!isset($_SESSION['username']))
+        if(logged())
+            echo "<button type='submit' name='action' value='booking'>Prenota</button>";
+        else
+            //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
             echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\");</script>";
+
         ?>
     </table>
 

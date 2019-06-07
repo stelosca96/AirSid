@@ -93,27 +93,28 @@ function registration(){
         my_redirect("La password non rispetta i requisiti di sicurezza");
 
 
-//    $conn = db_connect();
-//    $password = sha1($clear_password);
-//    //todo: Devo sanitizzare o no??
-////    $username = my_sanitize($insecure_username);
-//    $username = mysqli_real_escape_string($conn, $insecure_username);
-//    $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
-//    if(! $reply = mysqli_query($conn, $query))
-//        my_redirect("Errore collegamento al DB");
-//    if(mysqli_num_rows($reply)==0){
-//        my_destroy_session();
-//        my_redirect("Utente o password errata");
-//    }
-//    $row = mysqli_fetch_array($reply);
-//
-//    // todo: Controllo inutile lo faccio già in SQL
-//    if($row['username']!=$username || $row['password']!=$password){
-//        my_destroy_session();
-//        my_redirect("Utente o password errata");
-//    }
-//    mysqli_close($conn);
-//    $_SESSION['username'] = $username;
+    $conn = db_connect();
+    $password = sha1($clear_password);
+    //todo: Devo sanitizzare o no??
+//    $username = my_sanitize($insecure_username);
+    $username = mysqli_real_escape_string($conn, $insecure_username);
+
+    $query = "INSERT INTO users(username, password) VALUES ($username, $password)";
+    if(! $reply = mysqli_query($conn, $query))
+        my_redirect("Errore collegamento al DB");
+    if(mysqli_num_rows($reply)==0){
+        my_destroy_session();
+        my_redirect("Utente o password errata");
+    }
+    $row = mysqli_fetch_array($reply);
+
+    // todo: Controllo inutile lo faccio già in SQL
+    if($row['username']!=$username || $row['password']!=$password){
+        my_destroy_session();
+        my_redirect("Utente o password errata");
+    }
+    mysqli_close($conn);
+    $_SESSION['username'] = $username;
 }
 
 function logged(){
