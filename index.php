@@ -1,26 +1,81 @@
 <!doctype html>
 <html lang="it">
 <head>
+    <?php
+    include "airplane_function.php";
+    session_start();
+    do_action();
+    session_write_close();
+    ?>
     <link rel="stylesheet" href="style2.css" type="text/css">
+    <script type="text/javascript" src="jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Air Sid</title>
+    <script type="text/javascript">
+        function load_seat_state(sID) {
+            function set_red(sID) {
+                $("#cm" + sID).css("background-color", "red").css("color", "white");
+                $("#" + sID).attr("disabled", "true").attr("checked", "false");
+            }
+            function set_gray(sID) {
+                $("#cm" + sID).css("background-color", "darkgray").css("color", "white");
+                $("#" + sID).attr("disabled", "true");
+            }
+
+            function set_yellow(sID) {
+                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
+                $("#" + sID).attr("checked", "true");
+            }
+            function set_orange(sID) {
+                $("#cm" + sID).css("background-color", "orange").css("color", "white");
+                $("#" + sID).attr("checked", "false");
+            }
+
+            function set_green(sID) {
+                $("#cm" + sID).css("background-color", "yellowgreen").css("color", "white");
+                $("#" + sID).attr("checked", "false");
+            }
+            <?php
+                if(isset($_SESSION["username"]))
+                    echo "uID = '".$_SESSION["username"]."'";
+                else echo "uID=0";
+            ?>
+
+            $("#cm" + sID).css("background-color", "blue");
+            //todo: posso fare una get anche se cambio stato sul db??
+            $.get('seat_get_state.php?sID=' + sID, function(data, status) {
+                if(status!=="success" || data==="error") {
+                    alert("Si è verificato un problema");
+                    set_gray(sID)
+                }
+                switch (data) {
+                    case "busy":
+                        set_red(sID);
+                        break;
+                    case "reserved":
+                        set_orange(sID);
+                        break;
+                    case "free":
+                        set_yellow(sID);
+                        break;
+                    case "my":
+                        set_green(sID);
+                        break;
+                }
+            })
+        }
 
 
+
+    </script>
 </head>
 <body>
 
-<?php
-    include "utility.php";
-    session_start();
-    do_action();
-    session_write_close();
-
-?>
 <header id="title_bar">
-    <h1>Seleziona un posto</h1>
+    <h1>Sid Airlines</h1>
     <?php
     if(!isset($_SESSION['username']))
         echo "<button id='loginBtn'>Login</button>";
@@ -46,8 +101,8 @@
             </div>
 
             <div class="modal-body" id="modalRegistrazione">
-                <form id="formRegistrazione">
-                    <input class="loginInput" type="text" name="username" placeholder="Inserisci username" id="username">
+                <form id="formRegistrazione" method="post" action="index.php">
+                    <input class="loginInput" type="text" name="username" placeholder="Inserisci indirizzo mail" id="username">
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password"  id="password">
                     <input class="loginInput" type="password" name="password_retype" placeholder="Riscrivi password"  id="password_retype">
                     <input type="hidden" name="action" value="registration">
@@ -56,34 +111,31 @@
             </div>
         </div>
     </div>
-    <script>
-        const modal = document.getElementById("login");
-        const modalLogin = document.getElementById("modalLogin");
-        const modalRegistrazione = document.getElementById("modalRegistrazione");
-        const modalTitle = document.getElementById("modalTitle");
-        const btnLogin = document.getElementById("loginBtn");
-        const btnRegistrazione = document.getElementById("registrazioneBtn");
-        const span = document.getElementsByClassName("close")[0];
-        btnLogin.onclick = function() {
-            modal.style.display = "block";
-            modalLogin.style.display = "block";
-            modalRegistrazione.style.display = "none";
-            modalTitle.textContent = "Login";
-        };
+    <script type="text/javascript">
 
-        btnRegistrazione.onclick = function() {
-            modal.style.display = "block";
-            modalRegistrazione.style.display = "block";
-            modalTitle.textContent = "Registrazione";
-            modalLogin.style.display = "none";
-        };
+        const modal = document.getElementsByClassName("modal")[0];
 
-        span.onclick = function() {
-            modal.style.display = "none";
-            modalLogin.style.display = "none";
-            modalRegistrazione.style.display = "none";
+        $(`#loginBtn`).click(function() {
+            $('.modal').css("display", "block");
+            $('#modalLogin').css("display", "block");
+            $('#modalRegistrazione').css("display", "none");
+            $('#modalTitle').text("Login");
+        });
 
-        };
+        $(`#registrazioneBtn`).click(function() {
+            $('.modal').css("display", "block");
+            $('#modalLogin').css("display", "none");
+            $('#modalRegistrazione').css("display", "block");
+            $('#modalTitle').text("Registrazione");
+        });
+
+        $(`#close`).click(function() {
+            $('.modal').css("display", "none");
+            $('#modalLogin').css("display", "none");
+            $('#modalRegistrazione').css("display", "none");
+            $('#modalTitle').text("Registrazione");
+        });
+        //todo: rifare in jquery
         window.onclick = function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
@@ -106,27 +158,41 @@
 <section id="aereo">
 
     <table id="fusoliera">
-            <?php
+        <?php
         //la larghezza deve essere un numero pari
+        $res = load_all_seats();
         $larghezza = 6;
         $lunghezza = 10;
+        var_dump(total_busy_reserved_count($larghezza, $lunghezza, $res));
         for($y=1; $y<=$lunghezza; $y++){
             echo "<tr class='sedili'>\n";
-            for($x=0; $x<$larghezza+1; $x++){
+            for($x=0; $x<$larghezza; $x++){
+                $sID = $y.chr($x + 65);
                 if($x == $larghezza/2)
                     //Disegnare il corridoio
-                    echo "<td id='corridoio'></td>\n";
-                else{
-                    echo "<td><label class=\"container\">";
-                    echo "<input type=\"checkbox\" id=".$y.chr($x + 65).">";
-                    echo "<span class=\"checkmark\">".$y.chr($x + 65)."</span></label></td>\n";
-                }
+                    echo "<td id='corridoio' ></td>\n";
+                echo "<td><label class='container' id='cn".$sID."'>\n";
+                echo "<input type='checkbox' id='".$sID."''>\n";
+                $style = style_color($sID, $res);
+                echo "<span onclick='load_seat_state(\"".$sID."\")' ".$style." class='checkmark' id='cm".$sID."'>".$sID."</span></label></td>\n";
             }
             echo "</tr>\n";
         }
 
+        //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
+        if(!isset($_SESSION['username']))
+            echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\");</script>";
         ?>
     </table>
 
+<!--    <label class='container' id='cn".$sID."'>-->
+<!--    <input type='checkbox' id='1C'>-->
+<!--    <span class='checkmark' id='cm1C'>1C</span></label>-->
+<!---->
+<!--    <script type="text/javascript">-->
+<!--        $('#1C').change(load_seat_state('1C'));-->
+<!--    </script>-->
+
+</section>
 </body>
 </html>
