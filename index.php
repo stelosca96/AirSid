@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <?php
-    include "airplane_function.php";
+    include "airplane_functions.php";
     session_start();
     do_action();
     session_write_close();
@@ -163,11 +163,10 @@
         <?php
         if(logged())
             echo "<!--        <input type=\"hidden\" value=\"booking\">-->
-            <input type=\"submit\" name=\"refresh\" value=\"Aggiorna\">
-    
-            <input type=\"submit\" name=\"delete_reservations\" value=\"Cancella prenotazioni\">
-    
-            <input type=\"submit\" name=\"booking\" value=\"Prenota\">"
+            <button type='submit' name='action' value='refresh'>Aggiorna</button>
+            <button type='submit' name='action' value='delete_reservations'>Cancella prenotazioni</button>
+            <button type='submit' name='action' value='booking'>Prenota</button>";
+
         ?>
 
 <!--     todo: da valutare se fare la fusoliera in orizzontale   -->
@@ -212,11 +211,12 @@
             echo "<tr class='sedili'>\n";
             for($x=0; $x<$larghezza; $x++){
                 $sID = $y.chr($x + 65);
+                $checked = is_checked($sID, $res);
                 if($x == $larghezza/2)
                     //Disegnare il corridoio
                     echo "<td id='corridoio' ></td>\n";
                 echo "<td><label class='container' id='cn".$sID."'>\n";
-                echo "<input type='checkbox' id='".$sID."''>\n";
+                echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
                 $style = style_color($sID, $res);
                 echo "<span onclick='load_seat_state(\"".$sID."\")' ".$style." class='checkmark' id='cm".$sID."'>".$sID."</span></label></td>\n";
             }

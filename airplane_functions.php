@@ -24,12 +24,54 @@ function do_action(){
     }
 }
 
+function booking(){
+    if(!isset($_POST["reserved"]))
+        my_redirect("Non ci sono posti prenotati");
+    $reserved = $_POST["reserved"];
+    $uID = $_SESSION["username"];
+
+    $conn = db_connect();
+
+//    // todo: qua dipende cosa voglio fare... Se renderlo compatibile senza javascript,
+//    // altrimenti posso fare anche il controllo che sia reserved
+//    $query = "UPDATE seats SET state='busy'  WHERE id=?";
+//    $statement = mysqli_stmt_init($conn);
+//    $ref = mysqli_stmt_prepare($statement, $query);
+//
+    try{
+        mysqli_autocommit($conn,false);
+        $query = "SELECT * FROM seats  WHERE user='$uID' FOR UPDATE ";
+        if(!mysqli_query($conn,$query))
+            throw new Exception("Query lock fallita");
+
+        foreach ($reserved as $sID){
+            $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
+            echo $query."<br>";
+            if(!mysqli_query($conn,$query))
+                throw new Exception("Query $sID fallita");
+        }
+        if (!mysqli_commit($conn))
+            throw new Exception("Commit fallito");
+
+    }catch (Exception $e){
+        mysqli_rollback($conn);
+        //todo: scopo debug
+        echo "Rollback ".$e->getMessage();
+    }
+    mysqli_autocommit($conn,true);
+
+
+
+
+
+}
+
 function delete_reservations(){
     $conn = db_connect();
     $uID = $_SESSION["username"];
-    $query = "DELETE * FROM seats WHERE user='$uID' AND state='reserved'";
+    $query = "DELETE FROM seats WHERE user='$uID' AND state='reserved'";
     if(!$reply = mysqli_query($conn, $query))
-        my_redirect("Errore: cancellazione prenotazioni non riuscita");
+        my_redirect("Errore: cancellazione prenotazioni non riuscita: ");
     mysqli_close($conn);
 }
 
@@ -75,4 +117,12 @@ function style_color($sID, $res){
         }
     if(!isset($_SESSION["username"]))
         return "style='color:white;background-color:greenyellow'";
+}
+
+function is_checked($sID, $res){
+    if(isset($res[$sID]))
+        $data = $res[$sID];
+        if(isset($data) && $data["user"]==$_SESSION["username"]  && $data["state"]!="busy")
+            return "checked";
+    return "";
 }
