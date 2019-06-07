@@ -35,7 +35,7 @@
             }
 
             function set_green(sID) {
-                $("#cm" + sID).css("background-color", "yellowgreen").css("color", "white");
+                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
                 $("#" + sID).attr("checked", "false");
             }
             <?php
@@ -54,15 +54,17 @@
                 switch (data) {
                     case "busy":
                         set_red(sID);
+                        alert("Il posto selezionato è occupato");
                         break;
                     case "reserved":
-                        set_orange(sID);
+                        set_yellow(sID);
+                        alert("Un altro utente aveva prenotato il posto selezionato");
                         break;
                     case "free":
-                        set_yellow(sID);
+                        set_green(sID);
                         break;
                     case "my":
-                        set_green(sID);
+                        set_yellow(sID);
                         break;
                 }
             })
@@ -111,6 +113,7 @@
             </div>
         </div>
     </div>
+
     <script type="text/javascript">
 
         const modal = document.getElementsByClassName("modal")[0];
@@ -156,7 +159,48 @@
     ?>
 </aside>
 <section id="aereo">
+    <form action="index.php" method="post">
+        <?php
+        if(logged())
+            echo "<!--        <input type=\"hidden\" value=\"booking\">-->
+            <input type=\"submit\" name=\"refresh\" value=\"Aggiorna\">
+    
+            <input type=\"submit\" name=\"delete_reservations\" value=\"Cancella prenotazioni\">
+    
+            <input type=\"submit\" name=\"booking\" value=\"Prenota\">"
+        ?>
 
+<!--     todo: da valutare se fare la fusoliera in orizzontale   -->
+<!--        <table id="fusoliera2">-->
+<!--            --><?php
+//            //la larghezza deve essere un numero pari
+//            $res = load_all_seats();
+//            $larghezza = 6;
+//            $lunghezza = 10;
+//            var_dump(total_busy_reserved_count($larghezza, $lunghezza, $res));
+//                for($x=0; $x<$larghezza+1; $x++){
+//                    echo "<tr class='sedili'>\n";
+//                    for($y=1; $y<=$lunghezza; $y++){
+//
+//                        $sID = $y.chr($x + 65);
+//                    if($x == $larghezza/2)
+//                        //Disegnare il corridoio
+//                        echo "<tr id='corridoio' ></tr>\n";
+//                    else{
+//                        echo "<td><label class='container' id='cn".$sID."'>\n";
+//                        echo "<input type='checkbox' id='".$sID."''>\n";
+//                        $style = style_color($sID, $res);
+//                        echo "<span onclick='load_seat_state(\"".$sID."\")' ".$style." class='checkmark' id='cm".$sID."'>".$sID."</span></label></td>\n";
+//                    }
+//                }
+//                echo "</tr>\n";
+//            }
+//
+//            //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
+//            if(!isset($_SESSION['username']))
+//                echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\");</script>";
+//            ?>
+<!--        </table>-->
     <table id="fusoliera">
         <?php
         //la larghezza deve essere un numero pari
@@ -184,6 +228,10 @@
             echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\");</script>";
         ?>
     </table>
+
+
+
+    </form>
 
 <!--    <label class='container' id='cn".$sID."'>-->
 <!--    <input type='checkbox' id='1C'>-->

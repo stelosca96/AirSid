@@ -1,6 +1,38 @@
 <?php
 include "utility.php";
 
+function do_action(){
+    var_dump($_REQUEST);
+    if(isset($_REQUEST['action'])) {
+        switch ($_REQUEST['action']) {
+            case "login":
+                login();
+                break;
+            case "logout":
+                my_destroy_session();
+                break;
+            case "registration":
+                registration();
+                break;
+            case "delete_reservations":
+                delete_reservations();
+                break;
+            case "booking":
+                booking();
+                break;
+        }
+    }
+}
+
+function delete_reservations(){
+    $conn = db_connect();
+    $uID = $_SESSION["username"];
+    $query = "DELETE * FROM seats WHERE user='$uID' AND state='reserved'";
+    if(!$reply = mysqli_query($conn, $query))
+        my_redirect("Errore: cancellazione prenotazioni non riuscita");
+    mysqli_close($conn);
+}
+
 function load_all_seats(){
     $conn = db_connect();
     $query = "SELECT * FROM seats";
@@ -41,4 +73,6 @@ function style_color($sID, $res){
                     return "style='color:darkgrey;background-color:yellow'";
             return "style='color:white;background-color:orange'";
         }
+    if(!isset($_SESSION["username"]))
+        return "style='color:white;background-color:greenyellow'";
 }

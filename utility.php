@@ -116,18 +116,7 @@ function registration(){
 //    $_SESSION['username'] = $username;
 }
 
-function do_action(){
-    if(isset($_REQUEST['action'])) {
-        switch ($_REQUEST['action']) {
-            case "login":
-                login();
-                break;
-            case "logout":
-                my_destroy_session();
-                break;
-            case "registration":
-                registration();
-                break;
-        }
-    }
+function logged(){
+    return isset($_SESSION["username"]);
 }
+

@@ -41,7 +41,7 @@
 
 /* When the radio button is checked, add a blue background */
 .container input:checked ~ .checkmark {
-    background-color: yellow;
+    background-color: #e4dd51;
     color: darkgray;
 }
 
@@ -79,6 +79,15 @@
     padding-bottom: 40px;
     padding-left: 15px;
     padding-right:15px;
+    margin: 30px;
+}
+#fusoliera2{
+    /*border-left: 1px solid black;*/
+    border-top: 5px solid darkgray;
+    border-bottom:  5px solid darkgray;
+    padding-right: 40px;
+    padding-top: 15px;
+    padding-bottom:15px;
     margin: 30px;
 }
 
