@@ -47,6 +47,10 @@ $sID = $_GET["sID"];
 $conn = db_connect();
 $res = "error";
 
+//todo: controllare che il codice del sedile sia reale
+$sID = mysqli_real_escape_string($conn, $sID);
+
+
 try {
     mysqli_autocommit($conn, false);
 

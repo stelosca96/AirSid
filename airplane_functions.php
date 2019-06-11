@@ -9,16 +9,24 @@ function do_action(){
                 login();
                 break;
             case "logout":
-                my_destroy_session();
+                if(logged())
+                    my_destroy_session();
                 break;
             case "registration":
-                registration();
+                if(!logged())
+                    registration();
+                else
+                    my_redirect("Sei già loggato");
                 break;
             case "delete_reservations":
-                delete_reservations();
+                if(logged())
+                    delete_reservations();
                 break;
             case "booking":
-                booking();
+                if(logged())
+                    booking();
+                else
+                    my_redirect("Devi essere loggato per potere effettuare una prenotazione");
                 break;
         }
     }

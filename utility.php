@@ -29,6 +29,7 @@ function  login(){
     if(! $reply = mysqli_query($conn, $query))
         my_redirect("Errore collegamento al DB");
     if(mysqli_num_rows($reply)==0){
+        mysqli_close($conn);
         my_destroy_session();
         my_redirect("Utente o password errata");
     }
@@ -36,16 +37,20 @@ function  login(){
 
     // todo: Controllo inutile lo faccio già in SQL
     if($row['username']!=$username || $row['password']!=$password){
+        mysqli_close($conn);
         my_destroy_session();
         my_redirect("Utente o password errata");
     }
     mysqli_close($conn);
     $_SESSION['username'] = $username;
+
+//    todo: è giusto questo metodo per settare la durata della sessione??
+//    session_cache_expire(2);
 }
 
 function my_redirect($mex){
     //todo: rimettere header.. Non worka bene, perchè??
-//    header('HTTP/1.1 307 temporary redirect');
+    //header('HTTP/1.1 307 temporary redirect');
     header("Location: index.php?mex=".urlencode($mex));
     exit;
 }
@@ -59,8 +64,13 @@ function my_destroy_session(){
     session_destroy();
 }
 
-function user_exist(){
-
+function is_https(){
+    if ( !(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')){
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $redirect);
+        exit();
+    }
 }
 
 function validate_mail($emailaddress){
@@ -103,16 +113,18 @@ function registration(){
     if(! $reply = mysqli_query($conn, $query))
         my_redirect("Errore collegamento al DB");
     if(mysqli_num_rows($reply)==0){
+        mysqli_close($conn);
         my_destroy_session();
         my_redirect("Utente o password errata");
     }
-    $row = mysqli_fetch_array($reply);
-
-    // todo: Controllo inutile lo faccio già in SQL
-    if($row['username']!=$username || $row['password']!=$password){
-        my_destroy_session();
-        my_redirect("Utente o password errata");
-    }
+//    $row = mysqli_fetch_array($reply);
+//
+//    // todo: Controllo inutile lo faccio già in SQL
+//    if($row['username']!=$username || $row['password']!=$password){
+//        mysqli_close($conn);
+//        my_destroy_session();
+//        my_redirect("Utente o password errata");
+//    }
     mysqli_close($conn);
     $_SESSION['username'] = $username;
 }
