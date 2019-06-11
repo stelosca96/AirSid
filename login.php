@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "utility.php";
 if(!isset($_POST["username"]) || !isset($_POST["password"]))
     return false;
@@ -15,12 +16,15 @@ $password = sha1($clear_password);
 //    $username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
 $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
-if(! $reply = mysqli_query($conn, $query))
-    my_redirect("Errore collegamento al DB");
+if(! $reply = mysqli_query($conn, $query)) {
+    echo "Errore collegamento al db";
+    return;
+}
 if(mysqli_num_rows($reply)==0){
     mysqli_close($conn);
     my_destroy_session();
-    return false;
+    echo "Username o password errati";
+    return;
 }
 $row = mysqli_fetch_array($reply);
 
@@ -28,10 +32,13 @@ $row = mysqli_fetch_array($reply);
 if($row['username']!=$username || $row['password']!=$password){
     mysqli_close($conn);
     my_destroy_session();
-    return false;
+    echo "Username o password errati";
+    return;
 }
 mysqli_close($conn);
 $_SESSION['username'] = $username;
-return true;
+session_write_close();
+echo "OK";
+return;
 //    todo: è giusto questo metodo per settare la durata della sessione??
 //    session_cache_expire(2);

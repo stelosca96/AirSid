@@ -56,6 +56,8 @@ function my_redirect($mex){
 }
 
 function my_destroy_session(){
+    if(!logged())
+        return;
     $_SESSION = array();
     if(ini_get("session.use_cookies")){
         $params = session_get_cookie_params();
@@ -109,14 +111,14 @@ function registration(){
 //    $username = my_sanitize($insecure_username);
     $username = mysqli_real_escape_string($conn, $insecure_username);
 
-    $query = "INSERT INTO users(username, password) VALUES ($username, $password)";
+    $query = "INSERT INTO users(username, password) VALUES ('$username', '$password')";
     if(! $reply = mysqli_query($conn, $query))
         my_redirect("Errore collegamento al DB");
-    if(mysqli_num_rows($reply)==0){
-        mysqli_close($conn);
-        my_destroy_session();
-        my_redirect("Utente o password errata");
-    }
+//    if(mysqli_num_rows($reply)==0){
+//        mysqli_close($conn);
+//        my_destroy_session();
+//        my_redirect("Utente o password errata");
+//    }
 //    $row = mysqli_fetch_array($reply);
 //
 //    // todo: Controllo inutile lo faccio già in SQL

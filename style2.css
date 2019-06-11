@@ -3,11 +3,11 @@
     cursor: pointer;
     font-size: 18px;
     border-left: 10px;
-
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    pointer-events: none;
 }
 /*.container {*/
 /*    display: block;*/
@@ -88,11 +88,11 @@
 }
 
 
-/* When the radio button is checked, add a blue background */
-.container input:checked ~ .checkmark {
-    background-color: #e4dd51;
-    color: darkgray;
-}
+/*!* When the radio button is checked, add a blue background *!*/
+/*.container input:checked ~ .checkmark {*/
+/*    background-color: #e4dd51;*/
+/*    color: darkgray;*/
+/*}*/
 
 /*#cn2A input:checked  ~ #cm2A{*/
 /*    background-color: fuchsia;*/
