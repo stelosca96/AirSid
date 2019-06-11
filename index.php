@@ -3,20 +3,21 @@ include "airplane_functions.php";
 is_https();
 session_start();
 do_action();
-var_dump($_SESSION);
 session_write_close();
 ?>
 <!doctype html>
-<html lang="it" xmlns="http://www.w3.org/1999/html">
+<html lang="it">
 <head>
-    <link rel="stylesheet" href="style2.css" type="text/css">
-    <script type="text/javascript" src="jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sid Airlines</title>
-    <script type="text/javascript">
+    <link rel="stylesheet" href="style2.css" type="text/css">
+    <script src="jquery.js"></script>
+    <script src="my.js"></script>
+
+    <script>
         function load_seat_state(sID) {
             function set_red(sID) {
                 $("#cm" + sID).css("background-color", "red").css("color", "white");
@@ -41,7 +42,7 @@ session_write_close();
                 $("#" + sID).attr("checked", "false");
             }
             <?php
-                if(isset($_SESSION["username"]))
+                if(logged())
                     echo "uID = '".$_SESSION["username"]."'";
                 else echo "uID=0";
             ?>
@@ -72,90 +73,6 @@ session_write_close();
             })
         }
 
-        // function disable_label_click(sID) {
-        // $(".container").css("pointer-events","none");
-        //
-        // $("#cn" + sID).click(function () {
-        //         return false;
-        //     })
-        // }
-        function validateEmail(email) {
-            //todo: controllare se la re è uguale a quella del php
-            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(String(email).toLowerCase());
-        }
-        function validate_registration() {
-
-            let username = $("#mail").val();
-            let password = $("#password_registration").val();
-            let password2 = $("#password_retype").val();
-            if(username===""){
-                $("#alert_login").css("display", "block");
-                $("#login_error").text("Username non inserito");
-                return false;
-            }
-            if(password===""){
-                $("#alert_login").css("display", "block");
-                $("#login_error").text("Password non inserita");
-                return false;
-            }
-            if(!validateEmail(username)) {
-                $("#alert_login").css("display", "block");
-                $("#login_error").text("Indirizzo mail non valido");
-                return false;
-            }
-        }
-        function validate_login() {
-            let data = {};
-            data["username"] = $("#username").val();
-            data["password"] = $("#password").val();
-            if(data["username"]===""){
-                $("#alert_login").css("display", "block");
-                $("#login_error").text("Username non inserito");
-                return false;
-            }
-            if(data["password"]===""){
-                $("#alert_login").css("display", "block");
-                $("#login_error").text("Password non inserita");
-                return false;
-            }
-            //todo: https??
-            $.post("login.php", data).done(function (data) {
-                alert(data);
-                if(data!=="OK") {
-                    $("#alert_login").css("display", "block");
-                    $("#login_error").text(JSON.stringify(data));
-                    return false;
-                }
-                else
-                    location.reload();
-            });
-        return false;
-
-        }
-
-        $(document).ready(function(){
-            let i = 0;
-            $("#password_registration").keypress(function(){
-                $("span").text(i += 1);
-            });
-        });
-        $(document).ready(function(){
-            $("#mail").keypress(function(){
-                let username = $("#mail").val();
-                if(validateEmail(username)) {
-                    // $("#registerBtn").attr("disabled", false);
-                }
-
-            else
-                    // $("#registerBtn").attr("disabled", true);
-            $("#alert_login").css("display", "block");
-            $("#login_error").text(validateEmail(username) + " " + count++);
-            });
-        });
-
-
-
     </script>
 </head>
 <body>
@@ -182,7 +99,7 @@ session_write_close();
         <div class="modal-content">
             <div class="modal-header">
                 <span id="close_modal" class="close">&times;</span>
-                <h2 id="modalTitle"></h2>
+                <h2 id="modalTitle">Login</h2>
             </div>
             <div class="modal-body" id="modalLogin">
                 <div id="alert_login" class="alert">
@@ -199,10 +116,26 @@ session_write_close();
             </div>
 
             <div class="modal-body" id="modalRegistrazione">
-                <form id="formRegistrazione"  onsubmit="return validate_registration()"  method="post" action="index.php">
+                <div id="alert_registration" class="alert">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <span id="registration_error"></span>
+                </div>
+                <form id="formRegistrazione"  onsubmit="return validate_registration()">
                     <input class="loginInput" type="email" name="username" placeholder="Inserisci indirizzo mail" id="mail" required>
+                    <div id="alert_mail_error" class="alert">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <span id="mail_error">Non hai inserito un indirizzo mail corretto.</span>
+                    </div>
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password"  id="password_registration" required>
+                    <div id="alert_pasword_not_secure" class="alert">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <span id="password_error">La password deve contenere un carattere alfabetico minuscolo e uno maiuscolo o un numero.</span>
+                    </div>
                     <input class="loginInput" type="password" name="password_retype" placeholder="Riscrivi password"  id="password_retype" required>
+                    <div id="alert_paswords_not_equals" class="alert">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <span id="passwords_error">Le password inserite sono diverse.</span>
+                    </div>
                     <input type="hidden" name="action" value="registration">
                     <input class="loginInput" type="submit" id="registerBtn" value="Registrati">
                 </form>
@@ -210,7 +143,7 @@ session_write_close();
         </div>
     </div>
 
-    <script type="text/javascript">
+    <script>
 
         const modal = document.getElementsByClassName("modal")[0];
 
@@ -244,10 +177,12 @@ session_write_close();
 
 </aside>
 <section>
+    <h2>Prenota i tuoi posti:</h2>
+
     <?php
     //todo: scopo debug
     if(isset($_GET['mex']))
-        echo "<div class=\"alert\"><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>"
+        echo "<div id='alert_mex' class=\"alert\"><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>"
     ?>
     <form action="index.php" method="post">
         <?php
@@ -275,47 +210,52 @@ session_write_close();
             </tr>
        </table>
         <?php
-        if(logged())
+        if(logged()) {
             echo "<button id='prenota_button' type='submit' name='action' value='booking'>Prenota</button>";
-        else {
             //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
-            echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", \"none\").css('cursor', 'default');</script>";
-            echo "<script type=\"text/javascript\">$(\".checkmark\").css(\"pointer-events\", \"none\").css('cursor', 'default');</script>";
+//            echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", 'default').css('cursor', 'default');</script>";
+//            echo "<script type=\"text/javascript\">$(\".checkmark\").css(\"pointer-events\", 'default').css('cursor', 'default');</script>";
         }
         ?>
+
         </div>
         <div id="scroll_f">
 
             <table id="fusoliera">
         <?php
-        for($x=0; $x<$larghezza+1; $x++){
-            if($x> $larghezza/2)
-                $key = $x-1;
-            else
-                $key = $x;
-            echo "<tr class='sedili'>\n";
-            for($y=1; $y<=$lunghezza; $y++){
-                $sID = $y.chr($key + 65);
-                $checked = is_checked($sID, $res);
-                if($x == $larghezza/2)
-                    //Disegnare il corridoio
-                    echo "<tr id='corridoio' ></tr>\n";
-                else {
-                    echo "<td><label class='container' id='cn" . $sID . "'>\n";
-                    echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
-                    $style = style_color($sID, $res);
-                    echo "<span onclick='load_seat_state(\"" . $sID . "\")' " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
+        for($x=0; $x<$larghezza; $x++){
+            if($x == $larghezza/2){
+                echo "<tr>";
+                for($y=1; $y<=$lunghezza; $y++)
+                    echo "<td class='corridoio'></td>";
+                echo '</tr>';
                 }
+            echo "<tr class='sedili'>";
+            for($y=1; $y<=$lunghezza; $y++){
+                $sID = $y.chr($x + 65);
+                $checked = is_checked($sID, $res);
+                echo "<td><label class='container' id='cn" . $sID . "'>";
+                echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
+                $style = style_color($sID, $res);
+                echo "<span onclick='load_seat_state(\"" . $sID . "\")' " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
+
             }
-            echo "</tr>\n";
+            echo "</tr>";
         }
     ?>
     </table>
         </div>
 
 </form>
+    <?php
+        if(!logged())
+            echo ' <script>
+                $(".container").css("pointer-events", "none");
+            </script>';
+    ?>
 
-<table class="t_legend">
+
+    <table class="t_legend">
     <tr>
         <td><span class="legend" id="free_seat_legend">XY</span> </td>
         <td>Posto libero</td>

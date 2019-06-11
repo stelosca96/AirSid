@@ -3,6 +3,7 @@
 function db_connect(){
     $conn = mysqli_connect("localhost", "root", "", "airsid");
     if(!$conn){
+        //todo: da gestire diversamente o da togliere proprio
         my_redirect('Errore nella connessione(' .mysqli_connect_errno().')'.mysqli_connect_error());
     }
     return $conn;

@@ -53,11 +53,15 @@ function booking(){
             throw new Exception("Query lock fallita");
 
         foreach ($reserved as $sID){
+            //todo: controllare che il codice del sedile sia reale
+            //todo: devo sanitizzare anche in altri modi??
+            $sID = my_sanitize($sID);
+            $sID = mysqli_real_escape_string($conn, $sID);
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
             if(!mysqli_query($conn, $query))
-                throw new Exception("Query $sID fallita");
+                throw new Exception("Query fallita");
             if(mysqli_affected_rows($conn)==0)
-                throw new Exception("Il posto $sID è assegnato ad un altro utente (2)");
+                throw new Exception("Il posto $sID è assegnato ad un altro utente");
 
         }
         if (!mysqli_commit($conn))
@@ -67,10 +71,14 @@ function booking(){
         mysqli_rollback($conn);
         //todo: scopo debug
         mysqli_autocommit($conn,true);
+        mysqli_close($conn);
 
-        echo "Rollback ".$e->getMessage();
+        //echo "Rollback ".$e->getMessage();
+        my_redirect($e->getMessage());
     }
     mysqli_autocommit($conn,true);
+    mysqli_close($conn);
+
 }
 
 function delete_reservations(){

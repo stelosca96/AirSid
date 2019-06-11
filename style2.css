@@ -6,8 +6,6 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
-    pointer-events: none;
 }
 /*.container {*/
 /*    display: block;*/
@@ -60,6 +58,7 @@
     width: 40px;
     border-radius: 10%;
     text-align: right;
+
 }
 
 #free_seat_legend{
@@ -79,6 +78,8 @@
 .t_legend{
     text-align: left;
     alignment: left;
+    cursor: default;
+    pointer-events: none;
 }
 
 /* On mouse-over, add a grey background color */
@@ -139,13 +140,12 @@
 #fusoliera{
     /*border-left: 1px solid black;*/
     margin: 0 auto; /* or margin: 0 auto 0 auto */
-
     padding: 15px 20px;
     /*margin: 30px;*/
 }
 
 
-#corridoio{
+.corridoio{
     display: block;
     padding: 1.5px;
 }
@@ -169,7 +169,7 @@ header{
     /*background: yellow url("https://wetu.com/Resources/46257/Antarctica_2.jpg") no-repeat center;*/
     /*background: yellow url("https://www.bauerkg.de/images/pictures/w7e0505112a3b002a0814ce3b4387ddf/Fotolia_19279258_XXL.jpg") no-repeat center;*/
     /*background: yellow url("https://images.unsplash.com/photo-1509803874385-db7c23652552?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80") no-repeat center;*/
-    background: yellow url("sfondo_sid_airlines.jpg") no-repeat center;
+    background:black url("sfondo_sid_airlines.jpg") no-repeat center;
     background-size: cover;
     text-align: center;
     vert-align: middle;
@@ -314,6 +314,7 @@ button, input[type=submit] {
 
 #registerBtn, #registrazioneBtn{
     width: 100%;
+    margin-top: 0px;
     background: #F2545B;
 }
 
@@ -369,15 +370,21 @@ input[type=checkbox]{
 
 /* The alert message box */
 .alert {
+    display: none;
     padding: 20px;
-    background-color: red; /* Red */
+    background-color: #F2545B; /* Red */
     color: white;
-    margin-bottom: 15px;
+}
+
+#alert_mex{
+    display: block;
+    background-color: red; /* Red */
+    margin-bottom: 5px;
+
 }
 
 #alert_login{
     display: none;
-    background: #F2545B;
     margin-top: 10px;
     margin-bottom: 5px;
 

@@ -1,11 +1,17 @@
 <?php
-session_start();
 include "utility.php";
-if(!isset($_POST["username"]) || !isset($_POST["password"]))
-    return false;
+is_https();
 
-if($_POST["username"]=="" || $_POST["password"]=="")
-    return false;
+session_start();
+if(!isset($_POST["username"]) || !isset($_POST["password"])) {
+    echo "Parametri vuoti";
+    return;
+}
+
+if($_POST["username"]=="" || $_POST["password"]==""){
+    echo "Parametri vuoti";
+    return;
+}
 
 $insecure_username = $_POST['username'];
 $clear_password = $_POST['password'];

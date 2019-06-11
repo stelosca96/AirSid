@@ -1,5 +1,14 @@
 <?php
 
+function is_https(){
+    if ( !(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')){
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $redirect);
+        exit();
+    }
+}
+
 function db_connect(){
     $conn = mysqli_connect("localhost", "root", "", "airsid");
     if(!$conn)
@@ -34,6 +43,7 @@ function change_reservation($conn, $sID, $uID){
         throw new Exception("Errore set reserved");
     return "reserved";}
 
+is_https();
 session_start();
 session_write_close();
 
