@@ -146,6 +146,7 @@
 
 
 .corridoio{
+    /*todo: togliere il block*/
     display: block;
     padding: 1.5px;
 }

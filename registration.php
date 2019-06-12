@@ -1,5 +1,7 @@
 <?php
 //todo: https??
+//todo: usare return o exit??
+
 include "utility.php";
 is_https();
 session_start();
@@ -7,6 +9,10 @@ session_start();
 if(!(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['password2']))){
     echo "Errore parametri";
     exit;
+}
+
+if(logged()){
+    my_destroy_session();
 }
 
 $insecure_username = $_POST['username'];
@@ -17,7 +23,7 @@ $retype_password = $_POST['password2'];
 $conn = db_connect();
 $password = sha1($clear_password);
 //todo: Devo sanitizzare o no??
-//    $username = my_sanitize($insecure_username);
+$insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
 
 
@@ -47,4 +53,5 @@ if(! $reply = mysqli_query($conn, $query)) {
 }
 mysqli_close($conn);
 $_SESSION['username'] = $username;
+//todo: chiudere sessione
 echo "OK";

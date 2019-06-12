@@ -1,4 +1,7 @@
 <?php
+//la larghezza deve essere un numero pari
+$larghezza = 6;
+$lunghezza = 10;
 include "airplane_functions.php";
 is_https();
 session_start();
@@ -15,6 +18,7 @@ session_write_close();
     <title>Sid Airlines</title>
     <link rel="stylesheet" href="style2.css" type="text/css">
     <script src="jquery.js"></script>
+<!-- todo:   Lascio in quel file o tiro fuori??-->
     <script src="my.js"></script>
 
     <script>
@@ -42,13 +46,13 @@ session_write_close();
                 $("#" + sID).attr("checked", "false");
             }
             <?php
-                if(logged())
-                    echo "uID = '".$_SESSION["username"]."'";
-                else echo "uID=0";
+            if(logged())
+                echo "uID = '".$_SESSION["username"]."'";
+            else echo "uID=0";
             ?>
             //todo: decidere se farlo diventare blu quando è cliccato ed in attesa di uno stato
             //$("#cm" + sID).css("background-color", "blue");
-            //todo: posso fare una get anche se cambio stato sul db??
+            //todo: posso fare una get anche se cambio stato sul db?? --> usare post
             $.get('seat_get_state.php?sID=' + sID, function(data, status) {
                 if(status!=="success" || data==="error") {
                     alert("Si è verificato un problema");
@@ -72,7 +76,6 @@ session_write_close();
                 }
             })
         }
-
     </script>
 </head>
 <body>
@@ -102,7 +105,9 @@ session_write_close();
                 <h2 id="modalTitle">Login</h2>
             </div>
             <div class="modal-body" id="modalLogin">
+<!--                Div che contiene il form di login-->
                 <div id="alert_login" class="alert">
+<!--                    Bottone per chiudere la modal-->
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                     <span id="login_error"></span>
                 </div>
@@ -114,8 +119,9 @@ session_write_close();
                 </form>
                 <button id="registrazioneBtn">Non sei registrato?</button>
             </div>
-
+<!--            Div che contiene il form di registrazione-->
             <div class="modal-body" id="modalRegistrazione">
+<!--                Alert per notificare gli errori della richiesta ajax-->
                 <div id="alert_registration" class="alert">
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                     <span id="registration_error"></span>
@@ -182,17 +188,13 @@ session_write_close();
     <?php
     //todo: scopo debug
     if(isset($_GET['mex']))
-        echo "<div id='alert_mex' class=\"alert\"><span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>"
+        echo "<div id='alert_mex' class='alert'><span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>";
+
+    $res = load_all_seats();
+    //todo: fare conto aggiornato dopo ogni richiesta ajax
+    $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     ?>
-    <form action="index.php" method="post">
-        <?php
-        $res = load_all_seats();
-        //la larghezza deve essere un numero pari
-        $larghezza = 6;
-        $lunghezza = 10;
-        $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
-        ?>
-        <div id="top_of_section">
+    <div id="top_of_section">
         <table id="stats">
             <tr>
                 <th>Posti totali</th>
@@ -201,78 +203,74 @@ session_write_close();
                 <th>Posti liberi</th>
             </tr>
             <tr>
-            <?php
-                echo '<td>'.$stats["total"].'</td>
-                <td>'.$stats["busy"].'</td>
-                <td>'.$stats["reserved"].'</td>
-                <td>'.$stats["free"].'</td>';
-            ?>
+                <?php
+                    echo '<td>'.$stats["total"].'</td>'.
+                    '<td>'.$stats["busy"].'</td>'.
+                    '<td>'.$stats["reserved"].'</td>'.
+                    '<td>'.$stats["free"].'</td>';
+                ?>
             </tr>
-       </table>
+        </table>
+    </div>
+
+    <form action="index.php" method="post">
         <?php
-        if(logged()) {
+        //Nascondo il tasto di prenotazione se non sono loggato
+        if(logged())
             echo "<button id='prenota_button' type='submit' name='action' value='booking'>Prenota</button>";
-            //DISABILITO I CLICK SUI SEDILI SE NON SONO LOGGATO
-//            echo "<script type=\"text/javascript\">$(\".container\").css(\"pointer-events\", 'default').css('cursor', 'default');</script>";
-//            echo "<script type=\"text/javascript\">$(\".checkmark\").css(\"pointer-events\", 'default').css('cursor', 'default');</script>";
-        }
         ?>
-
-        </div>
         <div id="scroll_f">
-
             <table id="fusoliera">
-        <?php
-        for($x=0; $x<$larghezza; $x++){
-            if($x == $larghezza/2){
-                echo "<tr>";
-                for($y=1; $y<=$lunghezza; $y++)
-                    echo "<td class='corridoio'></td>";
-                echo '</tr>';
-                }
-            echo "<tr class='sedili'>";
-            for($y=1; $y<=$lunghezza; $y++){
-                $sID = $y.chr($x + 65);
-                $checked = is_checked($sID, $res);
-                echo "<td><label class='container' id='cn" . $sID . "'>";
-                echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
-                $style = style_color($sID, $res);
-                echo "<span onclick='load_seat_state(\"" . $sID . "\")' " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
+                <?php
+                for($x=0; $x<$larghezza; $x++){
+                    if($x == $larghezza/2){
+                        echo "<tr>";
+                        for($y=1; $y<=$lunghezza; $y++)
+                            echo "<td class='corridoio'></td>";
+                        echo '</tr>';
+                    }
+                    echo "<tr class='sedili'>";
+                    for($y=1; $y<=$lunghezza; $y++){
+                        $sID = $y.chr($x + 65);
+                        $checked = is_checked($sID, $res);
+                        echo "<td><label class='container' id='cn" . $sID . "'>";
+                        echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
+                        $style = style_color($sID, $res);
+                        echo "<span onclick='load_seat_state(\"" . $sID . "\")' " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
 
-            }
-            echo "</tr>";
-        }
-    ?>
-    </table>
+                    }
+                    echo "</tr>";
+                }
+                ?>
+            </table>
         </div>
 
-</form>
+    </form>
     <?php
-        if(!logged())
-            echo ' <script>
-                $(".container").css("pointer-events", "none");
-            </script>';
+    //Disabilito i click sui sedili se non sono loggato
+    if(!logged())
+        echo ' <script>$(".container").css("pointer-events", "none");</script>';
     ?>
 
-
+<!--    Mostro la legenda-->
     <table class="t_legend">
-    <tr>
-        <td><span class="legend" id="free_seat_legend">XY</span> </td>
-        <td>Posto libero</td>
-    </tr>
-    <tr>
-        <td><span class="legend" id="my_seat_legend">XY</span> </td>
-        <td>Mio posto</td>
-    </tr>
-    <tr>
-        <td><span class="legend" id="reserved_seat_legend">XY</span> </td>
-        <td>Posto riservato</td>
-    </tr>
-    <tr>
-        <td><span class="legend" id="busy_seat_legend">XY</span> </td>
-        <td>Posto occupato</td>
-    </tr>
-</table>
+        <tr>
+            <td><span class="legend" id="free_seat_legend">XY</span> </td>
+            <td>Posto libero</td>
+        </tr>
+        <tr>
+            <td><span class="legend" id="my_seat_legend">XY</span> </td>
+            <td>Mio posto</td>
+        </tr>
+        <tr>
+            <td><span class="legend" id="reserved_seat_legend">XY</span> </td>
+            <td>Posto riservato</td>
+        </tr>
+        <tr>
+            <td><span class="legend" id="busy_seat_legend">XY</span> </td>
+            <td>Posto occupato</td>
+        </tr>
+    </table>
 
 </section>
 </body>

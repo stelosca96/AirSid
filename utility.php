@@ -9,49 +9,16 @@ function db_connect(){
     return $conn;
 }
 
-function my_sanitize($insecure_string){
-    //todo: da implementare
-    $secure_string = $insecure_string;
-    return $secure_string;
-}
+function my_sanitize($string){
+    //todo: strip_tags o htmlentities??
+    $string = strip_tags($string);
 
-function  login(){
-    if(!(isset($_POST['username']) && isset($_POST['password'])))
-        my_redirect("Errore parametri");
-    $insecure_username = $_POST['username'];
-    $clear_password = $_POST['password'];
-
-    $conn = db_connect();
-    $password = sha1($clear_password);
-    //todo: Devo sanitizzare o no??
-//    $username = my_sanitize($insecure_username);
-    $username = mysqli_real_escape_string($conn, $insecure_username);
-    $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
-    if(! $reply = mysqli_query($conn, $query))
-        my_redirect("Errore collegamento al DB");
-    if(mysqli_num_rows($reply)==0){
-        mysqli_close($conn);
-        my_destroy_session();
-        my_redirect("Utente o password errata");
-    }
-    $row = mysqli_fetch_array($reply);
-
-    // todo: Controllo inutile lo faccio già in SQL
-    if($row['username']!=$username || $row['password']!=$password){
-        mysqli_close($conn);
-        my_destroy_session();
-        my_redirect("Utente o password errata");
-    }
-    mysqli_close($conn);
-    $_SESSION['username'] = $username;
-
-//    todo: è giusto questo metodo per settare la durata della sessione??
-//    session_cache_expire(2);
+    return $string;
 }
 
 function my_redirect($mex){
     //todo: rimettere header.. Non worka bene, perchè??
-    //header('HTTP/1.1 307 temporary redirect');
+    header('HTTP/1.1 302 temporary redirect');
     header("Location: index.php?mex=".urlencode($mex));
     exit;
 }
@@ -77,6 +44,7 @@ function is_https(){
 }
 
 function validate_mail($emailaddress){
+    //todo: far combaciare con quello del javascript
     $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
     return (preg_match($pattern, $emailaddress) === 1);
 }
@@ -84,52 +52,6 @@ function validate_mail($emailaddress){
 function validate_password($password){
     $pattern = '/^(?=.*[a-z])(?=.*[A-Z])|(?=.*[a-z])(?=.*[0-9])/';
     return (preg_match($pattern, $password) === 1);
-}
-
-function registration(){
-    if(!(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['password_retype'])))
-        my_redirect("Errore parametri");
-
-    $insecure_username = $_POST['username'];
-    $clear_password = $_POST['password'];
-    $retype_password = $_POST['password_retype'];
-
-    $username = my_sanitize($insecure_username);
-
-    if($retype_password!=$clear_password)
-        my_redirect("Le password sono diverse");
-
-    if(!validate_mail($username))
-        my_redirect("Indirizzo mail non corretto");
-
-    if(!validate_password($clear_password))
-        my_redirect("La password non rispetta i requisiti di sicurezza");
-
-
-    $conn = db_connect();
-    $password = sha1($clear_password);
-    //todo: Devo sanitizzare o no??
-//    $username = my_sanitize($insecure_username);
-    $username = mysqli_real_escape_string($conn, $insecure_username);
-
-    $query = "INSERT INTO users(username, password) VALUES ('$username', '$password')";
-    if(! $reply = mysqli_query($conn, $query))
-        my_redirect("Errore collegamento al DB");
-//    if(mysqli_num_rows($reply)==0){
-//        mysqli_close($conn);
-//        my_destroy_session();
-//        my_redirect("Utente o password errata");
-//    }
-//    $row = mysqli_fetch_array($reply);
-//
-//    // todo: Controllo inutile lo faccio già in SQL
-//    if($row['username']!=$username || $row['password']!=$password){
-//        mysqli_close($conn);
-//        my_destroy_session();
-//        my_redirect("Utente o password errata");
-//    }
-    mysqli_close($conn);
-    $_SESSION['username'] = $username;
 }
 
 function logged(){
