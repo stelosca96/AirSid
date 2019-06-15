@@ -10,14 +10,12 @@ function db_connect(){
 }
 
 function my_sanitize($string){
-    //todo: strip_tags o htmlentities??
     $string = strip_tags($string);
 
     return $string;
 }
 
 function my_redirect($mex){
-    //todo: rimettere header.. Non worka bene, perchè??
     header('HTTP/1.1 302 temporary redirect');
     header("Location: index.php?mex=".urlencode($mex));
     exit;
@@ -33,6 +31,8 @@ function my_destroy_session(){
     }
     session_destroy();
 }
+
+
 
 function is_https(){
     if ( !(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')){
@@ -58,3 +58,49 @@ function logged(){
     return isset($_SESSION["username"]);
 }
 
+function validate_seat($sID){
+    $pattern = '/^[0-9]+[A-Z]+$/';
+    return (preg_match($pattern, $sID) === 1);
+}
+
+function db_connect_ajax(){
+    $conn = mysqli_connect("localhost", "root", "", "airsid");
+    if(!$conn) {
+        echo "Errore connessione al database";
+        exit;
+    }
+    return $conn;
+}
+
+function inactivity(){
+    $t = time();
+    $diff = 0;
+    $durata_sessione = 2 * 60;
+    $new = false;
+    if (isset($_SESSION['time'])) {
+        $t0 = $_SESSION['time'];
+        $diff = ($t - $t0);
+    } else {
+        $new = true;
+    }
+    if ($new || ($diff > $durata_sessione)) {
+        my_destroy_session();
+        echo "Sessione scaduta";
+        return true;
+    } else {
+        $_SESSION['time'] = time();
+        return false;
+    }
+
+}
+
+function inactivity_redirect(){
+    if(inactivity()){
+        my_redirect("Sessione scaduta");
+    }
+}
+
+function set_session_value($username){
+    $_SESSION['username'] = $username;
+    $_SESSION['time'] = time();
+}

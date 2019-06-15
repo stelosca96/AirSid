@@ -1,25 +1,5 @@
 <?php
-
-function is_https(){
-    if ( !(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')){
-        $redirect = 'https://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $redirect);
-        exit();
-    }
-}
-
-function db_connect(){
-    $conn = mysqli_connect("localhost", "root", "", "airsid");
-    if(!$conn)
-        error();
-    return $conn;
-}
-
-function error(){
-    echo "error";
-    exit;
-}
+include "utility.php";
 
 function set_free($conn, $sID){
     $query = "DELETE FROM seats WHERE id='$sID'";
@@ -45,20 +25,38 @@ function change_reservation($conn, $sID, $uID){
 
 is_https();
 session_start();
+if(inactivity()){
+    echo ": aggiornare la pagina";
+    exit;
+
+}
+
 session_write_close();
+if(!isset($_POST["sID"])){
+    echo "Nessun sedile selezionato";
+    exit;
+}
 
-if(!isset($_GET["sID"]))
-    error();
+if(!isset($_SESSION["username"])){
+    echo "Utente non loggato";
+    exit;
+}
 
-if(!isset($_SESSION["username"]))
-    error();
+$sID = $_POST["sID"];
+$conn = db_connect_ajax();
+$res = "Errore";
 
-$sID = $_GET["sID"];
-$conn = db_connect();
-$res = "error";
-
-//todo: controllare che il codice del sedile sia reale
+$sID = my_sanitize($sID);
 $sID = mysqli_real_escape_string($conn, $sID);
+
+//todo: verificare se il sedile è nel range di  lunghezza e larghezza??
+//controllo che il codice del sedile sia reale rispetti lo standard
+if(!validate_seat($sID)){
+    echo "Errore nome sedile";
+    mysqli_close($conn);
+    exit;
+}
+
 
 
 try {
@@ -87,7 +85,6 @@ try {
         throw new Exception("Commit fallito");
 
     echo $res;
-
 }catch (Exception $e) {
     mysqli_rollback($conn);
     echo "Rollback ".$e->getMessage();

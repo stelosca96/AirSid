@@ -40,12 +40,6 @@ function booking(){
 
     $conn = db_connect();
 
-//    // todo: qua dipende cosa voglio fare... Se renderlo compatibile senza javascript,
-//    // altrimenti posso fare anche il controllo che sia reserved
-//    $query = "UPDATE seats SET state='busy'  WHERE id=?";
-//    $statement = mysqli_stmt_init($conn);
-//    $ref = mysqli_stmt_prepare($statement, $query);
-//
     try{
         mysqli_autocommit($conn,false);
         $query = "SELECT * FROM seats  WHERE user='$uID' FOR UPDATE ";
@@ -54,7 +48,6 @@ function booking(){
 
         foreach ($reserved as $sID){
             //todo: controllare che il codice del sedile sia reale
-            //todo: devo sanitizzare anche in altri modi??
             $sID = my_sanitize($sID);
             $sID = mysqli_real_escape_string($conn, $sID);
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
@@ -66,18 +59,16 @@ function booking(){
         }
         if (!mysqli_commit($conn))
             throw new Exception("Commit fallito");
-
-    }catch (Exception $e){
-        mysqli_rollback($conn);
-        //todo: scopo debug
         mysqli_autocommit($conn,true);
         mysqli_close($conn);
 
-        //echo "Rollback ".$e->getMessage();
-        my_redirect($e->getMessage());
+    }catch (Exception $e){
+        mysqli_rollback($conn);
+        mysqli_autocommit($conn,true);
+        mysqli_close($conn);
+        echo  $e->getMessage();
+        //my_redirect($e->getMessage());
     }
-    mysqli_autocommit($conn,true);
-    mysqli_close($conn);
 
 }
 
@@ -92,6 +83,7 @@ function delete_reservations(){
 
 function load_all_seats(){
     $conn = db_connect();
+    $res = null;
     $query = "SELECT * FROM seats";
     if(! $reply = mysqli_query($conn, $query))
         my_redirect("Errore collegamento al DB");
@@ -99,6 +91,11 @@ function load_all_seats(){
     while(($row = mysqli_fetch_assoc($reply))) {
         $data["state"] = $row["state"];
         $data["user"] = $row["user"];
+
+        if (logged() && $_SESSION["username"] == $data["user"])
+            $data["user"] = "my";
+        else
+            $data["user"] = "other";
         $res[$row["id"]] = $data;
     }
     mysqli_close($conn);
@@ -106,17 +103,26 @@ function load_all_seats(){
 }
 
 function total_busy_reserved_count($length, $width, $values){
+    //todo: controllo se loggato
     $res["total"] = $length*$width;
     $res["busy"] = 0;
     $res["reserved"] = 0;
+    $res["my"] = 0;
+    if($values==null){
+        $res["free"] = $res["total"];
+        return $res;
+    }
     foreach ($values as $value){
+        //var_dump($value);
         if($value["state"] == "busy")
             $res["busy"]++;
-        if($value["state"] == "reserved")
+        if ($value["state"] == "reserved" && $value["user"] == "other")
             $res["reserved"]++;
+        if ($value["state"] == "reserved" && $value["user"] == "my")
+            $res["my"]++;
     }
     //todo: cosa sinifica liberi??
-    $res["free"] = $res["total"] - ($res["busy"]+$res["reserved"] );
+    $res["free"] = $res["total"] - ($res["busy"]+$res["reserved"]+$res["my"]);
     return $res;
 }
 
@@ -125,21 +131,19 @@ function style_color($sID, $res){
         $data = $res[$sID];
         if($data["state"]=="busy")
             return "style='color:white;background-color:red'";
-            if(isset($_SESSION["username"]))
-                if($data["user"]==$_SESSION["username"])
-                    return "style='color:darkgrey;background-color:yellow'";
-            return "style='color:white;background-color:orange'";
-        }
-    if(!isset($_SESSION["username"]))
-        return "style='color:white;background-color:greenyellow'";
+        if($data["user"]=="my")
+            return "style='color:darkgrey;background-color:yellow'";
+        return "style='color:white;background-color:orange'";
+    }
+    return "style='color:white;background-color:greenyellow'";
 }
 
 function is_checked($sID, $res){
-    if(!isset($_SESSION["username"]))
+    if(!logged())
         return "";
     if(isset($res[$sID]))
         $data = $res[$sID];
-        if(isset($data) && $data["user"]==$_SESSION["username"]  && $data["state"]!="busy")
+        if(isset($data) && $data["user"]=="my"  && $data["state"]!="busy")
             return "checked";
     return "";
 }

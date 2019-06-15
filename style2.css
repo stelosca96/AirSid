@@ -51,6 +51,11 @@
 /*    color: white;*/
 /*}*/
 
+noscript{
+    display: block;
+    text-align: center;
+}
+
 .legend{
     display: block;
     font-size: 20px;
@@ -336,6 +341,7 @@ input[type=email], input[type=password] {
     box-sizing: border-box;
 }
 input[type=checkbox]{
+
     cursor: default;
     pointer-events: none;
 }
@@ -406,4 +412,8 @@ input[type=checkbox]{
 /* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
+}
+
+.stats{
+    text-align: center;
 }

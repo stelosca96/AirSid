@@ -23,7 +23,6 @@ $clear_password = $_POST['password'];
 
 $conn = db_connect();
 $password = sha1($clear_password);
-//todo: Devo sanitizzare o no??
 $insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
 $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
@@ -48,7 +47,7 @@ if($row['username']!=$username || $row['password']!=$password){
     return;
 }
 mysqli_close($conn);
-$_SESSION['username'] = $username;
+set_session_value($username);
 //todo: chiudere sessione
 session_write_close();
 echo "OK";

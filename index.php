@@ -5,8 +5,14 @@ $lunghezza = 10;
 include "airplane_functions.php";
 is_https();
 session_start();
+if(logged())
+    inactivity_redirect();
 do_action();
 session_write_close();
+$res = load_all_seats();
+//todo: fare conto aggiornato dopo ogni richiesta ajax
+$stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
+//var_dump($_REQUEST);
 ?>
 <!doctype html>
 <html lang="it">
@@ -22,10 +28,48 @@ session_write_close();
     <script src="my.js"></script>
 
     <script>
+        seats = <?php echo json_encode($res); ?>;
+        if (seats==null)
+            seats = {};
+        console.log(seats);
+
+        function count_seats() {
+            let total = <?php echo($larghezza*$lunghezza); ?>;
+            let busy = 0;
+            let reserved = 0;
+            let my = 0;
+            // console.log(seats)
+            for(let x in seats){
+                let seat = seats[x];
+                if(seat["state"] === "busy")
+                    busy++;
+                if (seat["state"] === "reserved" && seat["user"] === "other")
+                    reserved++;
+                if (seat["state"] === "reserved" && seat["user"] === "my")
+                    my++;
+            }
+            let free = total - busy - reserved - my;
+            $("#stats_busy").text(busy)
+            $("#stats_reserved").text(reserved)
+            $("#stats_my").text(my)
+            $("#stats_free").text(free)
+            // console.log(busy)
+            // console.log(total)
+
+        }
+
         function load_seat_state(sID) {
             function set_red(sID) {
                 $("#cm" + sID).css("background-color", "red").css("color", "white");
-                $("#" + sID).attr("disabled", "true").attr("checked", "false");
+                $("#" + sID).attr("disabled", "true").prop('checked', false);
+                let seat = {};
+                seat["state"] = "busy";
+                seat["user"] = "other";
+                seats[sID] = seat;
+                let prop = $("#" + sID).prop('checked');
+                console.log(sID + " " + prop);
+                count_seats();
+
             }
             function set_gray(sID) {
                 $("#cm" + sID).css("background-color", "darkgray").css("color", "white");
@@ -34,28 +78,39 @@ session_write_close();
 
             function set_yellow(sID) {
                 $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
-                $("#" + sID).attr("checked", "true");
+                $("#" + sID).prop('checked', true);
+                let seat = {};
+                seat["state"] = "reserved";
+                seat["user"] = "my";
+                seats[sID] = seat;
+                let prop = $("#" + sID).prop('checked');
+                console.log(sID + " " + prop);
+                count_seats();
             }
-            function set_orange(sID) {
-                $("#cm" + sID).css("background-color", "orange").css("color", "white");
-                $("#" + sID).attr("checked", "false");
-            }
+            // function set_orange(sID) {
+            //     $("#cm" + sID).css("background-color", "orange").css("color", "white");
+            //     $("#" + sID).removeAttr("checked");
+            // }
 
             function set_green(sID) {
                 $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
-                $("#" + sID).attr("checked", "false");
+                $("#" + sID).prop('checked', false);
+                delete seats[sID];
+                count_seats();
+                let prop = $("#" + sID).prop('checked');
+                console.log(sID + " " + prop);
             }
-            <?php
-            if(logged())
-                echo "uID = '".$_SESSION["username"]."'";
-            else echo "uID=0";
-            ?>
+<!--            -->
+
+            let data = {};
+            data["sID"] = sID;
             //todo: decidere se farlo diventare blu quando è cliccato ed in attesa di uno stato
             //$("#cm" + sID).css("background-color", "blue");
-            //todo: posso fare una get anche se cambio stato sul db?? --> usare post
-            $.get('seat_get_state.php?sID=' + sID, function(data, status) {
-                if(status!=="success" || data==="error") {
-                    alert("Si è verificato un problema");
+            $.post('seat_get_state.php', data, function(data) {
+                //alert(data);
+                if((data!=="my" && data !=="reserved" && data!=="busy" && data!=="free")) {
+                    alert(data);
+                    console.log(data);
                     set_gray(sID)
                 }
                 switch (data) {
@@ -86,7 +141,7 @@ session_write_close();
 <aside id="menu">
     <?php
     if(!logged())
-        echo "<button class='menuBtn' id='loginBtn'>Login</button>";
+        echo "<button class='menuBtn' id='loginBtn'>Abilita javascript per effettuare il login.</button>";
     else{
         echo "<span class='menuBtn' id='user'>".$_SESSION['username']."</span>
               <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
@@ -96,6 +151,12 @@ session_write_close();
               </form>";
     }
     ?>
+    <script>
+        $("#loginBtn").text("Login");
+    </script>
+    <noscript>
+        Il sito non funziona senza javascript abilitato
+    </noscript>
     <!-- Modal Bottone login -->
     <div id="login" class="modal">
 
@@ -173,7 +234,6 @@ session_write_close();
             $('#modalRegistrazione').css("display", "none");
             $('#modalTitle').text("Registrazione");
         });
-        //todo: rifare in jquery
         window.onclick = function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
@@ -186,28 +246,25 @@ session_write_close();
     <h2>Prenota i tuoi posti:</h2>
 
     <?php
-    //todo: scopo debug
     if(isset($_GET['mex']))
         echo "<div id='alert_mex' class='alert'><span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>";
-
-    $res = load_all_seats();
-    //todo: fare conto aggiornato dopo ogni richiesta ajax
-    $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     ?>
     <div id="top_of_section">
         <table id="stats">
             <tr>
                 <th>Posti totali</th>
-                <th>Posti occupati</th>
+                <th>Posti acquistati</th>
                 <th>Posti prenotati</th>
+                <th>Le mie prenotazioni</th>
                 <th>Posti liberi</th>
             </tr>
             <tr>
                 <?php
-                    echo '<td>'.$stats["total"].'</td>'.
-                    '<td>'.$stats["busy"].'</td>'.
-                    '<td>'.$stats["reserved"].'</td>'.
-                    '<td>'.$stats["free"].'</td>';
+                    echo '<td id="stats_total">'.$stats["total"].'</td>'.
+                    '<td id="stats_busy">'.$stats["busy"].'</td>'.
+                    '<td id="stats_reserved">'.$stats["reserved"].'</td>'.
+                    '<td id="stats_my">'.$stats["my"].'</td>'.
+                    '<td id="stats_free">'.$stats["free"].'</td>';
                 ?>
             </tr>
         </table>
@@ -217,7 +274,7 @@ session_write_close();
         <?php
         //Nascondo il tasto di prenotazione se non sono loggato
         if(logged())
-            echo "<button id='prenota_button' type='submit' name='action' value='booking'>Prenota</button>";
+            echo "<button id='prenota_button' type='submit' name='action' value='booking'>Acquista</button>";
         ?>
         <div id="scroll_f">
             <table id="fusoliera">

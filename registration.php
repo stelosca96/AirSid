@@ -1,5 +1,4 @@
 <?php
-//todo: https??
 //todo: usare return o exit??
 
 include "utility.php";
@@ -22,7 +21,6 @@ $retype_password = $_POST['password2'];
 
 $conn = db_connect();
 $password = sha1($clear_password);
-//todo: Devo sanitizzare o no??
 $insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
 
@@ -52,6 +50,6 @@ if(! $reply = mysqli_query($conn, $query)) {
     exit;
 }
 mysqli_close($conn);
-$_SESSION['username'] = $username;
+set_session_value($username);
 //todo: chiudere sessione
 echo "OK";
