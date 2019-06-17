@@ -25,6 +25,9 @@ $conn = db_connect();
 $password = sha1($clear_password);
 $insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
+//todo: da testare
+$username = strtolower($username);
+
 $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
 if(! $reply = mysqli_query($conn, $query)) {
     mysqli_close($conn);

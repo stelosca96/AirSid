@@ -20,7 +20,6 @@
 /* Hide the browser's default radio button */
 .container input {
     display: none;
-    opacity: 100%;
     cursor: none;
     /*height: 0;*/
     /*width: 0;*/
@@ -88,17 +87,17 @@ noscript{
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
-    border: 2px solid dodgerblue;
-    padding: 0px;
-}
-
-
-/*!* When the radio button is checked, add a blue background *!*/
-/*.container input:checked ~ .checkmark {*/
-/*    background-color: #e4dd51;*/
-/*    color: darkgray;*/
+/*.container:hover input ~ .checkmark {*/
+/*    border: 2px solid dodgerblue;*/
+/*    padding: 0px;*/
 /*}*/
+
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: dodgerblue;
+    color: darkgray;
+}
 
 /*#cn2A input:checked  ~ #cm2A{*/
 /*    background-color: fuchsia;*/
@@ -172,10 +171,8 @@ noscript{
 header{
 
     height: 350px;
-    /*background: yellow url("https://wetu.com/Resources/46257/Antarctica_2.jpg") no-repeat center;*/
-    /*background: yellow url("https://www.bauerkg.de/images/pictures/w7e0505112a3b002a0814ce3b4387ddf/Fotolia_19279258_XXL.jpg") no-repeat center;*/
-    /*background: yellow url("https://images.unsplash.com/photo-1509803874385-db7c23652552?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80") no-repeat center;*/
     background:black url("sfondo_sid_airlines.jpg") no-repeat center;
+    /*background:black url("sidAirline.png") no-repeat center;*/
     background-size: cover;
     text-align: center;
     vert-align: middle;
@@ -315,7 +312,7 @@ button, input[type=submit] {
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 #registerBtn, #registrazioneBtn{
@@ -343,7 +340,7 @@ input[type=email], input[type=password] {
 input[type=checkbox]{
 
     cursor: default;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 /* Modal Header */

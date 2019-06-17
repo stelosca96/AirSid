@@ -1,8 +1,9 @@
 <?php
 //la larghezza deve essere un numero pari
-$larghezza = 6;
-$lunghezza = 10;
 include "airplane_functions.php";
+$dim = getDim();
+$larghezza = $dim["larghezza"];
+$lunghezza = $dim["lunghezza"];
 is_https();
 session_start();
 if(logged())
@@ -194,12 +195,12 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                         <span id="mail_error">Non hai inserito un indirizzo mail corretto.</span>
                     </div>
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password"  id="password_registration" required>
-                    <div id="alert_pasword_not_secure" class="alert">
+                    <div id="alert_password_not_secure" class="alert">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <span id="password_error">La password deve contenere un carattere alfabetico minuscolo e uno maiuscolo o un numero.</span>
+                        <span id="password_error">La password deve contenere almeno 5 caratteri di cui un carattere alfabetico minuscolo e uno maiuscolo o un numero.</span>
                     </div>
                     <input class="loginInput" type="password" name="password_retype" placeholder="Riscrivi password"  id="password_retype" required>
-                    <div id="alert_paswords_not_equals" class="alert">
+                    <div id="alert_passwords_not_equals" class="alert">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                         <span id="passwords_error">Le password inserite sono diverse.</span>
                     </div>
@@ -291,9 +292,9 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                         $sID = $y.chr($x + 65);
                         $checked = is_checked($sID, $res);
                         echo "<td><label class='container' id='cn" . $sID . "'>";
-                        echo "<input type='checkbox' name='reserved[]' value='$sID' id='$sID' $checked>\n";
+                        echo "<input type='checkbox' onclick='load_seat_state(\"$sID\")' name='reserved[]' value='$sID' id='$sID' $checked>\n";
                         $style = style_color($sID, $res);
-                        echo "<span onclick='load_seat_state(\"" . $sID . "\")' " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
+                        echo "<span " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
 
                     }
                     echo "</tr>";

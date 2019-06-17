@@ -44,8 +44,7 @@ function is_https(){
 }
 
 function validate_mail($emailaddress){
-    //todo: far combaciare con quello del javascript
-    $pattern = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
+    $pattern = '/^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm';
     return (preg_match($pattern, $emailaddress) === 1);
 }
 
@@ -59,11 +58,22 @@ function logged(){
 }
 
 function validate_seat($sID){
+    $dim = getDim();
     $pattern = '/^[0-9]+[A-Z]+$/';
-    return (preg_match($pattern, $sID) === 1);
+    if (preg_match($pattern, $sID) === 1){
+        $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$sID);
+        $riga = $arr[0];
+        $colonna = ord($arr[1])-64;
+        echo "Riga: ", $riga,"\nColonna: ", $colonna;
+        if($riga<=0 || $riga>$dim["lunghezza"] || $colonna>$dim["larghezza"] || $colonna<=0)
+            return false;
+        return true;
+    }else return false;
+
 }
 
 function db_connect_ajax(){
+    //todo: cambiare nome utente e password
     $conn = mysqli_connect("localhost", "root", "", "airsid");
     if(!$conn) {
         echo "Errore connessione al database";
@@ -103,4 +113,10 @@ function inactivity_redirect(){
 function set_session_value($username){
     $_SESSION['username'] = $username;
     $_SESSION['time'] = time();
+}
+
+function getDim(){
+    $dim["lunghezza"] = 10;
+    $dim["larghezza"] = 6;
+    return $dim;
 }

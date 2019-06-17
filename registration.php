@@ -1,4 +1,5 @@
 <?php
+$min_len = 5;
 //todo: usare return o exit??
 
 include "utility.php";
@@ -23,17 +24,22 @@ $conn = db_connect();
 $password = sha1($clear_password);
 $insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
-
+//todo: da testare
+$username = strtolower($username);
 
 if(!validate_mail($username)) {
     mysqli_close($conn);
-    echo "Indirizzo mail non corretto";
+    echo "Indirizzo mail non corretto.";
     exit;
+}
+//todo: da provare
+if(strlen($password)<$min_len){
+    echo "La password deve essere lunga almeno ".$min_len." caratteri.";
 }
 
 if(!validate_password($clear_password)) {
     mysqli_close($conn);
-    echo "La password non rispetta i requisiti di sicurezza";
+    echo "La password non rispetta i requisiti di sicurezza.";
     exit;
 }
 

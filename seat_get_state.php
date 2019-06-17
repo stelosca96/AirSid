@@ -25,24 +25,23 @@ function change_reservation($conn, $sID, $uID){
 
 is_https();
 session_start();
-if(inactivity()){
-    echo ": aggiornare la pagina";
-    exit;
+//if(inactivity()){
+//    echo ": aggiornare la pagina";
+//    exit;
+//}
+//
+//session_write_close();
+//if(!isset($_POST["sID"])){
+//    echo "Nessun sedile selezionato";
+//    exit;
+//}
+//
+//if(!isset($_SESSION["username"])){
+//    echo "Utente non loggato";
+//    exit;
+//}
 
-}
-
-session_write_close();
-if(!isset($_POST["sID"])){
-    echo "Nessun sedile selezionato";
-    exit;
-}
-
-if(!isset($_SESSION["username"])){
-    echo "Utente non loggato";
-    exit;
-}
-
-$sID = $_POST["sID"];
+$sID = $_GET["sID"];
 $conn = db_connect_ajax();
 $res = "Errore";
 

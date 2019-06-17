@@ -6,12 +6,13 @@ function validate_password(password) {
 
 function validateEmail(email) {
     //todo: controllare se la re è uguale a quella del php
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm;
+    //let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 function validate_registration() {
     let data = {};
-    data["username"] = $("#mail").val();
+    data["username"] = $("#mail").val().toLowerCase();
     data["password"] = $("#password_registration").val();
     data["password2"] = $("#password_retype").val();
     if(data["username"] ===""){
@@ -37,9 +38,9 @@ function validate_registration() {
     if(!check_password(data["password"]))
         return false;
 
+
     if(!check_equals_passwords(data["password"], data["password2"]))
         return false;
-    console.log("QUA");
 
     //todo: https??
     $.post("registration.php", data, function (data) {
@@ -56,7 +57,7 @@ function validate_registration() {
 }
 function validate_login() {
     let data = {};
-    data["username"] = $("#username").val();
+    data["username"] = $("#username").val().toLowerCase();
     data["password"] = $("#password").val();
     if(data["username"]===""){
         $("#alert_login").css("display", "block");
@@ -84,18 +85,30 @@ function validate_login() {
 
 }
 
+function length_password(password) {
+    return password.length<5;
+}
+
 function check_password(password){
     if(password===""){
         $("#password_registration").css("background-color", "white");
-        $("#alert_pasword_not_secure").css("display", "none");
+        $("#alert_password_not_secure").css("display", "none");
         return false;
     }
-    if(validate_password(password)){
-        $("#alert_pasword_not_secure").css("display", "none");
-        $("#password_registration").css("background-color", "#c1f1a2");
-        return true;
-    }else {
-        $("#alert_pasword_not_secure").css("display", "block");
+    if(!length_password(password)){
+        if (validate_password(password)) {
+            $("#alert_password_not_secure").css("display", "none");
+            $("#password_registration").css("background-color", "#c1f1a2");
+            return true;
+        } else {
+            $("#alert_password_not_secure").css("display", "block");
+            //$("#password_error").text("Le password inserite sono diverse.");
+            $("#password_registration").css("background-color", "#f8a9ad");
+            return false;
+        }
+    }
+    else{
+        $("#alert_password_not_secure").css("display", "block");
         //$("#password_error").text("Le password inserite sono diverse.");
         $("#password_registration").css("background-color", "#f8a9ad");
         return false;
@@ -104,13 +117,13 @@ function check_password(password){
 
 function check_equals_passwords(password, password2){
     if(password!==password2){
-        $("#alert_paswords_not_equals").css("display", "block");
+        $("#alert_passwords_not_equals").css("display", "block");
         $("#passwords_error").text("Le password inserite sono diverse.");
         $("#password_retype").css("background-color", "#f8a9ad");
         return false;
 
     }else {
-        $("#alert_paswords_not_equals").css("display", "none");
+        $("#alert_passwords_not_equals").css("display", "none");
         $("#password_retype").css("background-color", "#c1f1a2");
         return true;
     }
@@ -154,7 +167,7 @@ $(document).ready(function(){
         let password2 = $("#password_retype").val();
         if(password==="" || password2===""){
             $("#password_retype").css("background-color", "white");
-            $("#alert_paswords_not_equals").css("display", "none");
+            $("#alert_passwords_not_equals").css("display", "none");
             return false;
         }
         check_equals_passwords(password, password2);
