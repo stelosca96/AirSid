@@ -67,6 +67,7 @@ function booking(){
         mysqli_rollback($conn);
         mysqli_autocommit($conn,true);
         mysqli_close($conn);
+        delete_reservations();
         //echo  $e->getMessage();
         my_redirect($e->getMessage());
     }
@@ -142,9 +143,12 @@ function style_color($sID, $res){
 function is_checked($sID, $res){
     if(!logged())
         return "";
-    if(isset($res[$sID]))
-        $data = $res[$sID];
-        if(isset($data) && $data["user"]=="my"  && $data["state"]!="busy")
-            return "checked";
+    if(!isset($res[$sID]))
+        return "";
+    $data = $res[$sID];
+    if(isset($data) && $data["user"]=="my"  && $data["state"]!="busy")
+        return "checked";
+    if(isset($data) && $data["state"]=="busy")
+        return "disabled";
     return "";
 }

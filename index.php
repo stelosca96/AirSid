@@ -1,10 +1,10 @@
 <?php
-//la larghezza deve essere un numero pari
 include "airplane_functions.php";
 $dim = getDim();
 $larghezza = $dim["larghezza"];
 $lunghezza = $dim["lunghezza"];
 is_https();
+check_cookies_enabled();
 session_start();
 if(logged())
     inactivity_redirect();
@@ -141,7 +141,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 <aside id="menu">
     <?php
     if(!logged())
-        echo "<button class='menuBtn' id='loginBtn'>Abilita javascript per effettuare il login.</button>";
+        echo "<button class='menuBtn' id='loginBtn'>Login</button>";
     else{
         echo "<span class='menuBtn' id='user'>".$_SESSION['username']."</span>
               <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
@@ -152,10 +152,10 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     }
     ?>
     <script>
-        $("#loginBtn").text("Login");
+        $("#loginBtn").css("visibility", "visible");
     </script>
     <noscript>
-        Il sito non funziona senza javascript abilitato
+        Il sito non funziona senza javascript abilitato.
     </noscript>
     <!-- Modal Bottone login -->
     <div id="login" class="modal">
@@ -196,7 +196,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password"  id="password_registration" required>
                     <div id="alert_password_not_secure" class="alert">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                        <span id="password_error">La password deve contenere almeno 5 caratteri di cui un carattere alfabetico minuscolo e uno maiuscolo o un numero.</span>
+                        <span id="password_error">La password deve contenere almeno un carattere alfabetico minuscolo e uno maiuscolo o un numero.</span>
                     </div>
                     <input class="loginInput" type="password" name="password_retype" placeholder="Riscrivi password"  id="password_retype" required>
                     <div id="alert_passwords_not_equals" class="alert">
@@ -295,7 +295,6 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                         echo "<input type='checkbox' onclick='load_seat_state(\"$sID\")' name='reserved[]' value='$sID' id='$sID' $checked>\n";
                         $style = style_color($sID, $res);
                         echo "<span " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
-
                     }
                     echo "</tr>";
                 }

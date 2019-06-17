@@ -32,10 +32,6 @@ if(!validate_mail($username)) {
     echo "Indirizzo mail non corretto.";
     exit;
 }
-//todo: da provare
-if(strlen($password)<$min_len){
-    echo "La password deve essere lunga almeno ".$min_len." caratteri.";
-}
 
 if(!validate_password($clear_password)) {
     mysqli_close($conn);

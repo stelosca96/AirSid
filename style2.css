@@ -53,6 +53,7 @@
 noscript{
     display: block;
     text-align: center;
+    margin: 5px;
 }
 
 .legend{
@@ -86,18 +87,18 @@ noscript{
     pointer-events: none;
 }
 
-/* On mouse-over, add a grey background color */
-/*.container:hover input ~ .checkmark {*/
-/*    border: 2px solid dodgerblue;*/
-/*    padding: 0px;*/
-/*}*/
+ /*On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    border: 2px solid dodgerblue;
+    padding: 0px;
+}
 
 
 /* When the radio button is checked, add a blue background */
-.container input:checked ~ .checkmark {
-    background-color: dodgerblue;
-    color: darkgray;
-}
+/*.container input:checked ~ .checkmark {*/
+/*    background-color: dodgerblue;*/
+/*    color: darkgray;*/
+/*}*/
 
 /*#cn2A input:checked  ~ #cm2A{*/
 /*    background-color: fuchsia;*/
@@ -279,6 +280,7 @@ body{
 }
 
 #loginBtn{
+    visibility: hidden;
     position: center;
     margin-right: 2%;
 }
@@ -317,7 +319,7 @@ button, input[type=submit] {
 
 #registerBtn, #registrazioneBtn{
     width: 100%;
-    margin-top: 0px;
+    margin-top: 5px;
     background: #F2545B;
 }
 

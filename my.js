@@ -6,8 +6,7 @@ function validate_password(password) {
 
 function validateEmail(email) {
     //todo: controllare se la re è uguale a quella del php
-    let re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm;
-    //let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/igm;
     return re.test(String(email).toLowerCase());
 }
 function validate_registration() {
@@ -85,29 +84,17 @@ function validate_login() {
 
 }
 
-function length_password(password) {
-    return password.length<5;
-}
-
 function check_password(password){
     if(password===""){
         $("#password_registration").css("background-color", "white");
         $("#alert_password_not_secure").css("display", "none");
         return false;
     }
-    if(!length_password(password)){
-        if (validate_password(password)) {
-            $("#alert_password_not_secure").css("display", "none");
-            $("#password_registration").css("background-color", "#c1f1a2");
-            return true;
-        } else {
-            $("#alert_password_not_secure").css("display", "block");
-            //$("#password_error").text("Le password inserite sono diverse.");
-            $("#password_registration").css("background-color", "#f8a9ad");
-            return false;
-        }
-    }
-    else{
+    if (validate_password(password)) {
+        $("#alert_password_not_secure").css("display", "none");
+        $("#password_registration").css("background-color", "#c1f1a2");
+        return true;
+    } else {
         $("#alert_password_not_secure").css("display", "block");
         //$("#password_error").text("Le password inserite sono diverse.");
         $("#password_registration").css("background-color", "#f8a9ad");
@@ -158,7 +145,10 @@ function check_mail(username){
 $(document).ready(function(){
     $("#password_registration").keyup(function(){
         let password = $("#password_registration").val();
+        let password2 = $("#password_retype").val();
         check_password(password);
+        if(password2!=="")
+            check_equals_passwords(password, password2)
     });
 
     $("#password_retype").keyup(function(){
