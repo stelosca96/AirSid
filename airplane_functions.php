@@ -47,9 +47,10 @@ function booking(){
             throw new Exception("Query lock fallita");
 
         foreach ($reserved as $sID){
-            //todo: controllare che il codice del sedile sia reale
             $sID = my_sanitize($sID);
             $sID = mysqli_real_escape_string($conn, $sID);
+            if(!validate_seat($sID))
+                throw new Exception("Il posto $sID non esiste");
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
             if(!mysqli_query($conn, $query))
                 throw new Exception("Query fallita");

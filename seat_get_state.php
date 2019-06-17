@@ -49,7 +49,6 @@ $res = "Errore";
 $sID = my_sanitize($sID);
 $sID = mysqli_real_escape_string($conn, $sID);
 
-//todo: verificare se il sedile è nel range di  lunghezza e larghezza??
 //controllo che il codice del sedile sia reale rispetti lo standard
 if(!validate_seat($sID)){
     echo "Errore nome sedile";

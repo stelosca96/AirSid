@@ -6,12 +6,12 @@ session_start();
 
 if(!isset($_POST["username"]) || !isset($_POST["password"])) {
     echo "Parametri vuoti";
-    return;
+    exit;
 }
 
 if($_POST["username"]=="" || $_POST["password"]==""){
     echo "Parametri vuoti";
-    return;
+    exit;
 }
 
 if(logged()){
@@ -32,26 +32,26 @@ $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$pa
 if(! $reply = mysqli_query($conn, $query)) {
     mysqli_close($conn);
     echo "Errore login";
-    return;
+    exit;
 }
 if(mysqli_num_rows($reply)==0){
     mysqli_close($conn);
     my_destroy_session();
     echo "Username o password errati";
-    return;
+    exit;
 }
 $row = mysqli_fetch_array($reply);
 
-// todo: Controllo inutile lo faccio già in SQL
-if($row['username']!=$username || $row['password']!=$password){
-    mysqli_close($conn);
-    my_destroy_session();
-    echo "Username o password errati";
-    return;
-}
+//// todo: Controllo inutile lo faccio già in SQL
+//if($row['username']!=$username || $row['password']!=$password){
+//    mysqli_close($conn);
+//    my_destroy_session();
+//    echo "Username o password errati";
+//    exit;
+//}
 mysqli_close($conn);
 set_session_value($username);
-//todo: chiudere sessione
+//todo: chiudere sessione?
 session_write_close();
 echo "OK";
-return;
+exit;

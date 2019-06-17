@@ -11,7 +11,6 @@ if(logged())
 do_action();
 session_write_close();
 $res = load_all_seats();
-//todo: fare conto aggiornato dopo ogni richiesta ajax
 $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 //var_dump($_REQUEST);
 ?>
