@@ -64,7 +64,7 @@ function validate_seat($sID){
         $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$sID);
         $riga = $arr[0];
         $colonna = ord($arr[1])-64;
-        echo "Riga: ", $riga,"\nColonna: ", $colonna;
+        //echo "Riga: ", $riga,"\nColonna: ", $colonna;
         if($riga<=0 || $riga>$dim["lunghezza"] || $colonna>$dim["larghezza"] || $colonna<=0)
             return false;
         return true;

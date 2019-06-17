@@ -5,19 +5,19 @@ function do_action(){
     //var_dump($_REQUEST);
     if(isset($_REQUEST['action'])) {
         switch ($_REQUEST['action']) {
-            case "login":
-                login();
-                break;
+//            case "login":
+//                login();
+//                break;
             case "logout":
                 if(logged())
                     my_destroy_session();
                 break;
-            case "registration":
-                if(!logged())
-                    registration();
-                else
-                    my_redirect("Sei già loggato");
-                break;
+//            case "registration":
+//                if(!logged())
+//                    registration();
+//                else
+//                    my_redirect("Sei già loggato");
+//                break;
             case "delete_reservations":
                 if(logged())
                     delete_reservations();
@@ -66,8 +66,8 @@ function booking(){
         mysqli_rollback($conn);
         mysqli_autocommit($conn,true);
         mysqli_close($conn);
-        echo  $e->getMessage();
-        //my_redirect($e->getMessage());
+        //echo  $e->getMessage();
+        my_redirect($e->getMessage());
     }
 
 }

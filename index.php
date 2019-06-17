@@ -244,12 +244,13 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 
 </aside>
 <section>
-    <h2>Prenota i tuoi posti:</h2>
 
     <?php
     if(isset($_GET['mex']))
         echo "<div id='alert_mex' class='alert'><span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>";
     ?>
+    <h2>Prenota i tuoi posti:</h2>
+
     <div id="top_of_section">
         <table id="stats">
             <tr>
