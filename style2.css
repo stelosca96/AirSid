@@ -20,7 +20,7 @@
 /* Hide the browser's default radio button */
 .container input {
     display: none;
-    cursor: none;
+    /*cursor: none;*/
     /*height: 0;*/
     /*width: 0;*/
 }
@@ -239,6 +239,7 @@ body{
     padding: 0;
     margin: 0;
     font-family: Gotham, Arial, sans-serif;
+
 }
 
 /* The Modal (background) */
@@ -305,7 +306,6 @@ body{
     color: white;
     padding-bottom: 10px;
     border: none;
-    cursor: default;
 }
 
 button, input[type=submit] {
@@ -314,7 +314,6 @@ button, input[type=submit] {
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
-    /*cursor: pointer;*/
 }
 
 #registerBtn, #registrazioneBtn{
@@ -339,11 +338,10 @@ input[type=email], input[type=password] {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-input[type=checkbox]{
+/*input[type=checkbox]{*/
 
-    cursor: default;
-    /*pointer-events: none;*/
-}
+/*    !*pointer-events: none;*!*/
+/*}*/
 
 /* Modal Header */
 .modal-header {

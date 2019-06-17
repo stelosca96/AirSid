@@ -61,7 +61,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
         function load_seat_state(sID) {
             function set_red(sID) {
                 $("#cm" + sID).css("background-color", "red").css("color", "white");
-                $("#" + sID).attr("disabled", "true").prop('checked', false);
+                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default');
                 let seat = {};
                 seat["state"] = "busy";
                 seat["user"] = "other";
@@ -77,8 +77,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             }
 
             function set_yellow(sID) {
-                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
-                $("#" + sID).prop('checked', true);
+                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray").prop('checked', true);
                 let seat = {};
                 seat["state"] = "reserved";
                 seat["user"] = "my";
@@ -93,20 +92,19 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             // }
 
             function set_green(sID) {
-                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
-                $("#" + sID).prop('checked', false);
+                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white").prop('checked', false);
                 delete seats[sID];
                 count_seats();
                 let prop = $("#" + sID).prop('checked');
                 console.log(sID + " " + prop);
             }
 <!--            -->
-
             let data = {};
             data["sID"] = sID;
             //todo: decidere se farlo diventare blu quando è cliccato ed in attesa di uno stato
-            //$("#cm" + sID).css("background-color", "blue");
+            $("#cm" + sID).css("background-color", "blue").css("color", "white");
             $.post('seat_get_state.php', data, function(data) {
+
                 //alert(data);
                 if((data!=="my" && data !=="reserved" && data!=="busy" && data!=="free")) {
                     alert(data);

@@ -1,6 +1,6 @@
 <?php
 include "utility.php";
-
+//Todo: da togliere
 function set_free($conn, $sID){
     $query = "DELETE FROM seats WHERE id='$sID'";
     if (!$reply = mysqli_query($conn, $query))

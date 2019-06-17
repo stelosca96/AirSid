@@ -132,7 +132,7 @@ function style_color($sID, $res){
     if(isset($res[$sID])){
         $data = $res[$sID];
         if($data["state"]=="busy")
-            return "style='color:white;background-color:red'";
+            return "style='color:white;background-color:red;cursor:default'";
         if($data["user"]=="my")
             return "style='color:darkgrey;background-color:yellow'";
         return "style='color:white;background-color:orange'";
