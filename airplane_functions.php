@@ -110,7 +110,6 @@ function load_all_seats(){
 }
 
 function total_busy_reserved_count($length, $width, $values){
-    //todo: controllo se loggato
     $res["total"] = $length*$width;
     $res["busy"] = 0;
     $res["reserved"] = 0;
@@ -128,7 +127,6 @@ function total_busy_reserved_count($length, $width, $values){
         if ($value["state"] == "reserved" && $value["user"] == "my")
             $res["my"]++;
     }
-    //todo: cosa sinifica liberi??
     $res["free"] = $res["total"] - ($res["busy"]+$res["reserved"]+$res["my"]);
     return $res;
 }

@@ -1,6 +1,5 @@
 <?php
 $min_len = 5;
-//todo: usare return o exit??
 
 include "utility.php";
 is_https();

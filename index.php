@@ -245,8 +245,11 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     <?php
     if(isset($_GET['mex']))
         echo "<div id='alert_mex' class='alert'><span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>";
+    if(logged())
+        echo "<h2>Prenota i tuoi posti:</h2>";
+    else
+        echo "<h2>Posti prenotati:</h2>";
     ?>
-    <h2>Prenota i tuoi posti:</h2>
 
     <div id="top_of_section">
         <table id="stats">
@@ -254,16 +257,20 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                 <th>Posti totali</th>
                 <th>Posti acquistati</th>
                 <th>Posti prenotati</th>
-                <th>Le mie prenotazioni</th>
+                <?php
+                if (logged())
+                    echo "<th>Le mie prenotazioni</th>";
+                ?>
                 <th>Posti liberi</th>
             </tr>
             <tr>
                 <?php
                     echo '<td id="stats_total">'.$stats["total"].'</td>'.
                     '<td id="stats_busy">'.$stats["busy"].'</td>'.
-                    '<td id="stats_reserved">'.$stats["reserved"].'</td>'.
-                    '<td id="stats_my">'.$stats["my"].'</td>'.
-                    '<td id="stats_free">'.$stats["free"].'</td>';
+                    '<td id="stats_reserved">'.$stats["reserved"].'</td>';
+                    if (logged())
+                        echo '<td id="stats_my">'.$stats["my"].'</td>';
+                    echo '<td id="stats_free">'.$stats["free"].'</td>';
                 ?>
             </tr>
         </table>
@@ -282,7 +289,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     if($x == $larghezza/2){
                         echo "<tr>";
                         for($y=1; $y<=$lunghezza; $y++)
-                            echo "<td class='corridoio'></td>";
+                            echo "<td class='corridoio'>&nbsp;</td>";
                         echo '</tr>';
                     }
                     echo "<tr class='sedili'>";

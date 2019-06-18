@@ -1,5 +1,4 @@
 <?php
-//todo: usare return o exit??
 include "utility.php";
 is_https();
 session_start();

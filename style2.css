@@ -152,8 +152,8 @@ noscript{
 
 .corridoio{
     /*todo: togliere il block*/
-    display: block;
-    padding: 1.5px;
+    /*display: block;*/
+    padding-top: 10px;
 }
 
 #top_of_section{
@@ -348,6 +348,7 @@ input[type=email], input[type=password] {
     padding: 2px 16px;
     background-color: #067BC2;
     color: white;
+    text-align: center;
 }
 
 /* Modal Content */
@@ -413,4 +414,8 @@ input[type=email], input[type=password] {
 
 .stats{
     text-align: center;
+}
+
+.cookies_p{
+    color: black;
 }

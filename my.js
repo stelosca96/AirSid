@@ -5,7 +5,6 @@ function validate_password(password) {
 }
 
 function validateEmail(email) {
-    //todo: controllare se la re è uguale a quella del php
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/igm;
     return re.test(String(email).toLowerCase());
 }
@@ -41,7 +40,6 @@ function validate_registration() {
     if(!check_equals_passwords(data["password"], data["password2"]))
         return false;
 
-    //todo: https??
     $.post("registration.php", data, function (data) {
         if(data!=="OK") {
             alert(data);
@@ -68,7 +66,6 @@ function validate_login() {
         $("#login_error").text("Password non inserita");
         return false;
     }
-    //todo: https??
     $.post("login.php", data, function (data) {
         if(data!=="OK") {
             //alert(data);

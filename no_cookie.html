@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Sid Airlines</title>
+    <link rel="stylesheet" href="style2.css" type="text/css">
 </head>
 <body>
-<h1>Cookies non abilitati</h1>
-<p>Per continuare ad usare il sito devi abilitare i cookie dalle impostazioni del browser</p>
-<p>Dopo averli abilitati fare click <a href="index.php">qui</a>.</p>
+<div class="modal" style="display: block">
+
+    <div class="modal-content" >
+        <div class="modal-header">
+            <h2 id="modalTitle">Cookies non abilitati</h2>
+        </div>
+        <div class="modal-body" id="modalLogin">
+            <p class="cookies_p">Per continuare ad usare il sito devi abilitare i cookie dalle impostazioni del browser</p>
+            <a href="index.php"><button id="registrazioneBtn">Ho abilitato i cookie</button></a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
