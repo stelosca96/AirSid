@@ -22,7 +22,6 @@ function change_reservation($conn, $sID, $uID){
     if (!$reply = mysqli_query($conn, $query))
         throw new Exception("Errore set reserved");
     return "reserved";}
-
 is_https();
 session_start();
 if(inactivity()){
