@@ -16,7 +16,7 @@ function set_reserved($conn, $sID, $uID){
 }
 
 function change_reservation($conn, $sID, $uID){
-    $query = "UPDATE seats SET user='$uID'  WHERE id='$sID'";
+    $query = "UPDATE seats SET user='$uID'  WHERE id='$sID' AND state!='busy'";
     // echo $query;
     if (!$reply = mysqli_query($conn, $query))
         throw new Exception("Errore set reserved");

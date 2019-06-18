@@ -39,13 +39,13 @@ function booking(){
     $uID = $_SESSION["username"];
 
     $conn = db_connect();
-
     try{
         mysqli_autocommit($conn,false);
+//        mysqli_begin_transaction($conn);
         //todo: ha senso??
-        $query = "SELECT * FROM seats FOR UPDATE ";
-        if(!mysqli_query($conn,$query))
-            throw new Exception("Query lock fallita");
+//        $query = "SELECT * FROM seats WHERE user='$uID' FOR UPDATE ";
+//        if(!mysqli_query($conn,$query))
+//            throw new Exception("Query lock fallita");
 
         foreach ($reserved as $sID){
             //$sID = my_sanitize($sID);
@@ -55,12 +55,13 @@ function booking(){
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
             if(!mysqli_query($conn, $query))
                 throw new Exception("Query fallita");
-            if(mysqli_affected_rows($conn)==0){
+            if($a=mysqli_affected_rows($conn)==0){
                 $query = "INSERT INTO seats(id, state, user) VALUES ('$sID', 'busy', '$uID')";
                 if(! $reply = mysqli_query($conn, $query)) {
                     throw new Exception("Il posto $sID è assegnato ad un altro utente");
                 }
             }
+
 
         }
         if (!mysqli_commit($conn))
