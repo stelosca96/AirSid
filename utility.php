@@ -21,8 +21,7 @@ function db_connect(){
 }
 
 function my_sanitize($string){
-    $string = strip_tags($string);
-
+    $string = htmlentities($string);
     return $string;
 }
 

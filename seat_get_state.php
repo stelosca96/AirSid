@@ -44,7 +44,7 @@ $sID = $_POST["sID"];
 $conn = db_connect_ajax();
 $res = "Errore";
 
-$sID = my_sanitize($sID);
+//$sID = my_sanitize($sID);
 $sID = mysqli_real_escape_string($conn, $sID);
 
 //controllo che il codice del sedile sia reale rispetti lo standard

@@ -48,7 +48,7 @@ function booking(){
             throw new Exception("Query lock fallita");
 
         foreach ($reserved as $sID){
-            $sID = my_sanitize($sID);
+            //$sID = my_sanitize($sID);
             $sID = mysqli_real_escape_string($conn, $sID);
             if(!validate_seat($sID))
                 throw new Exception("Il posto $sID non esiste");
