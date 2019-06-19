@@ -166,4 +166,98 @@ $(document).ready(function(){
     });
 });
 
+function login_btn(){
+    $('.modal').css("display", "block");
+    $('#modalLogin').css("display", "block");
+    $('#modalRegistrazione').css("display", "none");
+    $('#modalTitle').text("Login");
+}
 
+
+function registration_btn(){
+    $('.modal').css("display", "block");
+    $('#modalLogin').css("display", "none");
+    $('#modalRegistrazione').css("display", "block");
+    $('#modalTitle').text("Registrazione");
+}
+
+function close_modal(){
+    $('.modal').css("display", "none");
+    $('#modalLogin').css("display", "none");
+    $('#modalRegistrazione').css("display", "none");
+    $('#modalTitle').text("Registrazione");
+}
+
+function set_notification(mex) {
+    $("#alert_notification").css("display", "block");
+    $("#notification").text(mex);
+
+}
+
+function load_seat_state(sID) {
+    function set_red(sID) {
+        $("#cm" + sID).css("background-color", "red").css("color", "white");
+        $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default');
+        let seat = {};
+        seat["state"] = "busy";
+        seat["user"] = "other";
+        seats[sID] = seat;
+        count_seats();
+
+    }
+    function set_gray(sID) {
+        $("#cm" + sID).css("background-color", "darkgray").css("color", "white");
+        $("#" + sID).attr("disabled", "true");
+    }
+
+    function set_yellow(sID) {
+        $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
+        let seat = {};
+        seat["state"] = "reserved";
+        seat["user"] = "my";
+        seats[sID] = seat;
+        let prop = $("#" + sID).prop('checked', true).prop('checked');
+        console.log(sID + " " + prop);
+        count_seats();
+    }
+
+
+    function set_green(sID) {
+        $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
+        delete seats[sID];
+        count_seats();
+        let prop = $("#" + sID).prop('checked', false).prop('checked');
+        console.log(sID + " " + prop);
+    }
+
+    let data = {};
+    data["sID"] = sID;
+    $("#cm" + sID).css("background-color", "blue").css("color", "white");
+    $.post('seat_get_state.php', data, function(data) {
+
+        //alert(data);
+        if((data!=="my" && data !=="reserved" && data!=="busy" && data!=="free")) {
+            alert(data);
+            console.log(data);
+            set_gray(sID)
+        }
+        switch (data) {
+            case "busy":
+                set_red(sID);
+                set_notification("Il posto " + sID + " è occupato.");
+                break;
+            case "reserved":
+                set_yellow(sID);
+                set_notification("Un altro utente aveva prenotato il posto " + sID + ".");
+                break;
+            case "free":
+                set_green(sID);
+                set_notification("Hai liberato il posto " + sID + ".");
+                break;
+            case "my":
+                set_yellow(sID);
+                set_notification("Hai prenotato il posto " + sID + ".");
+                break;
+        }
+    })
+}

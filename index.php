@@ -32,6 +32,8 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             seats = {};
         console.log(seats);
 
+
+
         function count_seats() {
             let total = <?php echo($larghezza*$lunghezza); ?>;
             let busy = 0;
@@ -48,10 +50,10 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     my++;
             }
             let free = total - busy - reserved - my;
-            $("#stats_busy").text(busy)
-            $("#stats_reserved").text(reserved)
-            $("#stats_my").text(my)
-            $("#stats_free").text(free)
+            $("#stats_busy").text(busy);
+            $("#stats_reserved").text(reserved);
+            $("#stats_my").text(my);
+            $("#stats_free").text(free);
             // console.log(busy)
             // console.log(total)
 
@@ -65,84 +67,12 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     my++;
             }
             if(my > 0)
-                return true
+                return true;
             set_notification("Non ci sono posti selezionati");
             return false;
         }
 
-        function set_notification(mex) {
-            $("#alert_notification").css("display", "block");
-            $("#notification").text(mex);
 
-        }
-
-        function load_seat_state(sID) {
-            function set_red(sID) {
-                $("#cm" + sID).css("background-color", "red").css("color", "white");
-                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default');
-                let seat = {};
-                seat["state"] = "busy";
-                seat["user"] = "other";
-                seats[sID] = seat;
-                count_seats();
-
-            }
-            function set_gray(sID) {
-                $("#cm" + sID).css("background-color", "darkgray").css("color", "white");
-                $("#" + sID).attr("disabled", "true");
-            }
-
-            function set_yellow(sID) {
-                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
-                let seat = {};
-                seat["state"] = "reserved";
-                seat["user"] = "my";
-                seats[sID] = seat;
-                let prop = $("#" + sID).prop('checked', true).prop('checked');
-                console.log(sID + " " + prop);
-                count_seats();
-            }
-
-
-            function set_green(sID) {
-                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
-                delete seats[sID];
-                count_seats();
-                let prop = $("#" + sID).prop('checked', false).prop('checked');
-                console.log(sID + " " + prop);
-            }
-
-            let data = {};
-            data["sID"] = sID;
-            $("#cm" + sID).css("background-color", "blue").css("color", "white");
-            $.post('seat_get_state.php', data, function(data) {
-
-                //alert(data);
-                if((data!=="my" && data !=="reserved" && data!=="busy" && data!=="free")) {
-                    alert(data);
-                    console.log(data);
-                    set_gray(sID)
-                }
-                switch (data) {
-                    case "busy":
-                        set_red(sID);
-                        set_notification("Il posto " + sID + " è occupato.");
-                        break;
-                    case "reserved":
-                        set_yellow(sID);
-                        set_notification("Un altro utente aveva prenotato il posto " + sID + ".");
-                        break;
-                    case "free":
-                        set_green(sID);
-                        set_notification("Hai liberato il posto " + sID + ".");
-                        break;
-                    case "my":
-                        set_yellow(sID);
-                        set_notification("Hai prenotato il posto " + sID + ".");
-                        break;
-                }
-            })
-        }
     </script>
 </head>
 <body>
@@ -153,7 +83,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 <aside id="menu">
     <?php
     if(!logged())
-        echo "<button class='menuBtn' id='loginBtn'>Login</button>";
+        echo "<button class='menuBtn' onclick='login_btn()' id='loginBtn'>Login</button>";
     else{
         echo "<span class='menuBtn' id='user'>".$_SESSION['username']."</span>
               <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
@@ -174,7 +104,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 
         <div class="modal-content">
             <div class="modal-header">
-                <span id="close_modal" class="close">&times;</span>
+                <span id="close_modal" onclick="close_modal()" class="close">&times;</span>
                 <h2 id="modalTitle">Login</h2>
             </div>
             <div class="modal-body" id="modalLogin">
@@ -190,7 +120,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     <input type="hidden" name="action" value="login">
                     <input class="loginInput" type="submit" id="submitBtn" value="Accedi">
                 </form>
-                <button id="registrazioneBtn">Non sei registrato?</button>
+                <button id="registrazioneBtn" onclick='registration_btn()'>Non sei registrato?</button>
             </div>
 <!--            Div che contiene il form di registrazione-->
             <div class="modal-body" id="modalRegistrazione">
@@ -226,26 +156,29 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 
         const modal = document.getElementsByClassName("modal")[0];
 
-        $(`#loginBtn`).click(function() {
-            $('.modal').css("display", "block");
-            $('#modalLogin').css("display", "block");
-            $('#modalRegistrazione').css("display", "none");
-            $('#modalTitle').text("Login");
-        });
+        // $(`#loginBtn`).click(function() {
+        //     $('.modal').css("display", "block");
+        //     $('#modalLogin').css("display", "block");
+        //     $('#modalRegistrazione').css("display", "none");
+        //     $('#modalTitle').text("Login");
+        // });
 
-        $(`#registrazioneBtn`).click(function() {
-            $('.modal').css("display", "block");
-            $('#modalLogin').css("display", "none");
-            $('#modalRegistrazione').css("display", "block");
-            $('#modalTitle').text("Registrazione");
-        });
 
-        $(`#close_modal`).click(function() {
-            $('.modal').css("display", "none");
-            $('#modalLogin').css("display", "none");
-            $('#modalRegistrazione').css("display", "none");
-            $('#modalTitle').text("Registrazione");
-        });
+        // $(`#registrazioneBtn`).click(function() {
+        //     $('.modal').css("display", "block");
+        //     $('#modalLogin').css("display", "none");
+        //     $('#modalRegistrazione').css("display", "block");
+        //     $('#modalTitle').text("Registrazione");
+        // });
+
+
+
+        // $(`#close_modal`).click(function() {
+        //     $('.modal').css("display", "none");
+        //     $('#modalLogin').css("display", "none");
+        //     $('#modalRegistrazione').css("display", "none");
+        //     $('#modalTitle').text("Registrazione");
+        // });
         window.onclick = function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
