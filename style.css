@@ -7,24 +7,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
 }
-/*.container {*/
-/*    display: block;*/
-/*    cursor: pointer;*/
-/*    font-size: 18px;*/
-/*    -webkit-user-select: none;*/
-/*    -moz-user-select: none;*/
-/*    -ms-user-select: none;*/
-/*    user-select: none;*/
-/*}*/
 
-/* Hide the browser's default radio button */
 .container input {
     display: none;
-    /*cursor: none;*/
-    /*height: 0;*/
-    /*width: 0;*/
 }
-/* Create a custom radio button */
 .checkmark {
     display: block;
     height: 40px;
@@ -38,17 +24,6 @@
     vertical-align: bottom;
     color: white;
 }
-/*.checkmark {*/
-/*    display: block;*/
-/*    height: 40px;*/
-/*    width: 40px;*/
-/*    padding: 2px;*/
-/*    border-radius: 10%;*/
-/*    background-color: greenyellow;*/
-/*    text-align: right;*/
-/*    vertical-align: bottom;*/
-/*    color: white;*/
-/*}*/
 
 noscript{
     display: block;
@@ -87,59 +62,19 @@ noscript{
     pointer-events: none;
 }
 
- /*On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
     border: 2px solid dodgerblue;
-    padding: 0px;
+    padding: 0;
 }
 
-
-/* When the radio button is checked, add a blue background */
-/*.container input:checked ~ .checkmark {*/
-/*    background-color: dodgerblue;*/
-/*    color: darkgray;*/
-/*}*/
-
-/*#cn2A input:checked  ~ #cm2A{*/
-/*    background-color: fuchsia;*/
-
-/*}*/
-
-
-/* Create the indicator (the dot/circle - hidden when not checked) */
 .checkmark:after {
     position: absolute;
     display: none;
 }
 
-/* Show the indicator (dot/circle) when checked */
 .container input:checked ~ .checkmark:after {
     display: block;
 }
-
-
-
-/* Style the indicator (dot/circle) */
-/*.container .checkmark:after {*/
-/*    top: 9px;*/
-/*    left: 9px;*/
-/*    width: 8px;*/
-/*    height: 8px;*/
-/*    border-radius: 50%;*/
-/*    background: white;*/
-/*}*/
-
-/*#fusoliera{*/
-/*    !*border-left: 1px solid black;*!*/
-/*    background: #fefefe;*/
-/*    border-right: 5px solid darkgray;*/
-/*    border-left:  5px solid darkgray;*/
-/*    padding-bottom: 40px;*/
-/*    padding-left: 15px;*/
-/*    padding-right:15px;*/
-/*    margin: 30px;*/
-/*}*/
-
 
 
 #fusoliera{
@@ -176,12 +111,6 @@ header{
     vertical-align: middle;
     display: grid;
     place-items: center;
-    /*position: fixed;*/
-    /*background: dodgerblue;*/
-    /*height: 100px;*/
-    /*width: 100%;*/
-    /*text-align: center;*/
-    /*z-index:300;*/
 }
 
 h1 {
@@ -219,13 +148,6 @@ section{
     width: 76%;
     alignment: center;
     margin-top: 20px;
-
-    /*position: absolute;*/
-    /*margin-top: 110px;*/
-    /*margin-left: 200px;*/
-    /*z-index:100;*/
-    /*width: 100%;*/
-    /*alignment: center;*/
 }
 
 
@@ -242,18 +164,17 @@ body{
 
 }
 
-/* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
 }
 
 .close {
@@ -338,12 +259,7 @@ input[type=email], input[type=password] {
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
-/*input[type=checkbox]{*/
 
-/*    !*pointer-events: none;*!*/
-/*}*/
-
-/* Modal Header */
 .modal-header {
     padding: 2px 16px;
     background-color: #067BC2;
@@ -351,7 +267,6 @@ input[type=email], input[type=password] {
     text-align: center;
 }
 
-/* Modal Content */
 .modal-content {
     position: relative;
     background-color: #fefefe;
@@ -364,16 +279,13 @@ input[type=email], input[type=password] {
     animation-duration: 0.4s
 }
 
-/* Add Animation */
 @keyframes animatetop {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
 }
 
-/* Modal Body */
 .modal-body {padding: 2px 16px;}
 
-/* The alert message box */
 .alert {
     display: none;
     padding: 20px;
@@ -405,7 +317,6 @@ input[type=email], input[type=password] {
 
 }
 
-/* The close button */
 .closebtn {
     margin-left: 15px;
     color: white;
@@ -417,7 +328,6 @@ input[type=email], input[type=password] {
     transition: 0.3s;
 }
 
-/* When moving the mouse over the close button */
 .closebtn:hover {
     color: black;
 }
