@@ -35,6 +35,7 @@ function do_action(){
 function booking(){
     if(!isset($_POST["reserved"]))
         my_redirect("Non ci sono posti prenotati");
+
     $reserved = $_POST["reserved"];
     $uID = $_SESSION["username"];
 
@@ -42,7 +43,6 @@ function booking(){
     try{
         mysqli_autocommit($conn,false);
 //        mysqli_begin_transaction($conn);
-        //todo: ha senso??
 //        $query = "SELECT * FROM seats WHERE user='$uID' FOR UPDATE ";
 //        if(!mysqli_query($conn,$query))
 //            throw new Exception("Query lock fallita");
@@ -68,7 +68,6 @@ function booking(){
             throw new Exception("Commit fallito");
         mysqli_autocommit($conn,true);
         mysqli_close($conn);
-
     }catch (Exception $e){
         mysqli_rollback($conn);
         mysqli_autocommit($conn,true);

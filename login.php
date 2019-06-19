@@ -24,7 +24,6 @@ $conn = db_connect();
 $password = sha1($clear_password);
 $insecure_username = my_sanitize($insecure_username);
 $username = mysqli_real_escape_string($conn, $insecure_username);
-//todo: da testare
 $username = strtolower($username);
 
 $query = "SELECT * FROM users WHERE username='".$username."' AND password='".$password."'";
@@ -41,7 +40,6 @@ if(mysqli_num_rows($reply)==0){
 }
 $row = mysqli_fetch_array($reply);
 
-//// todo: Controllo inutile lo faccio già in SQL
 //if($row['username']!=$username || $row['password']!=$password){
 //    mysqli_close($conn);
 //    my_destroy_session();

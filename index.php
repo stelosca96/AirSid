@@ -24,7 +24,6 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     <title>Sid Airlines</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script src="jquery.js"></script>
-<!-- todo:   Lascio in quel file o tiro fuori??-->
     <script src="my.js"></script>
 
     <script>
@@ -58,10 +57,29 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
 
         }
 
+        function are_there_booked_seats() {
+            let my = 0;
+            for(let x in seats){
+                let seat = seats[x];
+                if (seat["state"] === "reserved" && seat["user"] === "my")
+                    my++;
+            }
+            if(my > 0)
+                return true
+            set_notification("Non ci sono posti selezionati");
+            return false;
+        }
+
+        function set_notification(mex) {
+            $("#alert_notification").css("display", "block");
+            $("#notification").text(mex);
+
+        }
+
         function load_seat_state(sID) {
             function set_red(sID) {
                 $("#cm" + sID).css("background-color", "red").css("color", "white");
-                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default').prop('checked');
+                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default');
                 let seat = {};
                 seat["state"] = "busy";
                 seat["user"] = "other";
@@ -75,37 +93,27 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             }
 
             function set_yellow(sID) {
-                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray").prop('checked', true);
+                $("#cm" + sID).css("background-color", "yellow").css("color", "darkgray");
                 let seat = {};
                 seat["state"] = "reserved";
                 seat["user"] = "my";
                 seats[sID] = seat;
-                let prop = $("#" + sID).prop('checked');
+                let prop = $("#" + sID).prop('checked', true).prop('checked');
                 console.log(sID + " " + prop);
                 count_seats();
             }
-            // function set_orange(sID) {
-            //     $("#cm" + sID).css("background-color", "orange").css("color", "white");
-            //     $("#" + sID).removeAttr("checked");
-            // }
 
-            function set_notification(mex) {
-                $("#alert_notification").css("display", "block");
-                $("#notification").text(mex);
-
-            }
 
             function set_green(sID) {
-                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white").prop('checked', false);
+                $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
                 delete seats[sID];
                 count_seats();
-                let prop = $("#" + sID).prop('checked');
+                let prop = $("#" + sID).prop('checked', false).prop('checked');
                 console.log(sID + " " + prop);
             }
-<!--            -->
+
             let data = {};
             data["sID"] = sID;
-            //todo: decidere se farlo diventare blu quando è cliccato ed in attesa di uno stato
             $("#cm" + sID).css("background-color", "blue").css("color", "white");
             $.post('seat_get_state.php', data, function(data) {
 
@@ -118,19 +126,19 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                 switch (data) {
                     case "busy":
                         set_red(sID);
-                        set_notification("Il posto selezionato è occupato");
+                        set_notification("Il posto " + sID + " è occupato.");
                         break;
                     case "reserved":
                         set_yellow(sID);
-                        set_notification("Un altro utente aveva prenotato il posto selezionato");
+                        set_notification("Un altro utente aveva prenotato il posto " + sID + ".");
                         break;
                     case "free":
                         set_green(sID);
-                        set_notification("Hai liberato il posto " + sID);
+                        set_notification("Hai liberato il posto " + sID + ".");
                         break;
                     case "my":
                         set_yellow(sID);
-                        set_notification("Hai prenotato il posto " + sID);
+                        set_notification("Hai prenotato il posto " + sID + ".");
                         break;
                 }
             })
@@ -256,8 +264,9 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
         <span id="close_notification" class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>
         <span id="notification">Testo di prova</span>
     </div>
-
     <?php
+    if(isset($_REQUEST['action']) && $_REQUEST['action']=="booking")
+        echo '<script>set_notification("Acquisto effettuato correttamente");</script>';
     if(logged())
         echo "<h2>Prenota i tuoi posti:</h2>";
     else
@@ -289,7 +298,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
         </table>
     </div>
 
-    <form action="index.php" method="post">
+    <form action="index.php" onsubmit="return are_there_booked_seats()" method="post">
         <?php
         //Nascondo il tasto di prenotazione se non sono loggato
         if(logged())
@@ -346,7 +355,6 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             <td>Posto occupato</td>
         </tr>
     </table>
-
 </section>
 </body>
 </html>

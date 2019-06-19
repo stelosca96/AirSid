@@ -11,15 +11,7 @@ function check_cookies_enabled(){
     }
 }
 
-////todo: usare solo una db connect
-//function db_connect_ajax(){
-//    $conn = mysqli_connect("localhost", "root", "", "airsid");
-//    if(!$conn) {
-//        echo "Errore connessione al database";
-//        exit;
-//    }
-//    return $conn;
-//}
+
 function db_connect(){
     $conn = mysqli_connect("localhost", "s267614", "tivestom", "s267614");
     if(!$conn) {
