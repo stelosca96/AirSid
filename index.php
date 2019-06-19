@@ -22,7 +22,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
           content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sid Airlines</title>
-    <link rel="stylesheet" href="style2.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
     <script src="jquery.js"></script>
 <!-- todo:   Lascio in quel file o tiro fuori??-->
     <script src="my.js"></script>
@@ -61,13 +61,11 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
         function load_seat_state(sID) {
             function set_red(sID) {
                 $("#cm" + sID).css("background-color", "red").css("color", "white");
-                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default');
+                $("#" + sID).attr('disabled', 'true').prop('checked', false).css('cursor', 'default').prop('checked');
                 let seat = {};
                 seat["state"] = "busy";
                 seat["user"] = "other";
                 seats[sID] = seat;
-                let prop = $("#" + sID).prop('checked');
-                console.log(sID + " " + prop);
                 count_seats();
 
             }
@@ -90,6 +88,12 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
             //     $("#cm" + sID).css("background-color", "orange").css("color", "white");
             //     $("#" + sID).removeAttr("checked");
             // }
+
+            function set_notification(mex) {
+                $("#alert_notification").css("display", "block");
+                $("#notification").text(mex);
+
+            }
 
             function set_green(sID) {
                 $("#cm" + sID).css("background-color", "greenyellow").css("color", "white").prop('checked', false);
@@ -114,17 +118,19 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                 switch (data) {
                     case "busy":
                         set_red(sID);
-                        alert("Il posto selezionato è occupato");
+                        set_notification("Il posto selezionato è occupato");
                         break;
                     case "reserved":
                         set_yellow(sID);
-                        alert("Un altro utente aveva prenotato il posto selezionato");
+                        set_notification("Un altro utente aveva prenotato il posto selezionato");
                         break;
                     case "free":
                         set_green(sID);
+                        set_notification("Hai liberato il posto " + sID);
                         break;
                     case "my":
                         set_yellow(sID);
+                        set_notification("Hai prenotato il posto " + sID);
                         break;
                 }
             })
@@ -171,7 +177,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     <span id="login_error"></span>
                 </div>
                 <form id="formLogin" onsubmit="return validate_login()">
-                    <input class="loginInput" type="email" name="username" placeholder="Inserisci username" id="username" required>
+                    <input class="loginInput" type="email" name="username" maxlength="50" placeholder="Inserisci username" id="username" required>
                     <input class="loginInput" type="password" name="password" placeholder="Inserisci password" id="password" required>
                     <input type="hidden" name="action" value="login">
                     <input class="loginInput" type="submit" id="submitBtn" value="Accedi">
@@ -186,7 +192,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     <span id="registration_error"></span>
                 </div>
                 <form id="formRegistrazione"  onsubmit="return validate_registration()">
-                    <input class="loginInput" type="email" name="username" placeholder="Inserisci indirizzo mail" id="mail" required>
+                    <input class="loginInput" type="email" name="username" maxlength="50" placeholder="Inserisci indirizzo mail" id="mail" required>
                     <div id="alert_mail_error" class="alert">
                         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                         <span id="mail_error">Non hai inserito un indirizzo mail corretto.</span>
@@ -245,6 +251,13 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     <?php
     if(isset($_GET['mex']))
         echo "<div id='alert_mex' class='alert'><span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span>". $_GET['mex']."</div>";
+    ?>
+    <div id='alert_notification' class='alert'>
+        <span id="close_notification" class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>
+        <span id="notification">Testo di prova</span>
+    </div>
+
+    <?php
     if(logged())
         echo "<h2>Prenota i tuoi posti:</h2>";
     else

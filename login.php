@@ -50,7 +50,6 @@ $row = mysqli_fetch_array($reply);
 //}
 mysqli_close($conn);
 set_session_value($username);
-//todo: chiudere sessione?
-session_write_close();
+
 echo "OK";
 exit;

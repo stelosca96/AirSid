@@ -41,7 +41,7 @@ if(!isset($_SESSION["username"])){
 }
 
 $sID = $_POST["sID"];
-$conn = db_connect_ajax();
+$conn = db_connect();
 $res = "Errore";
 
 //$sID = my_sanitize($sID);

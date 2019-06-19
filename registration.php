@@ -26,6 +26,7 @@ $username = mysqli_real_escape_string($conn, $insecure_username);
 //todo: da testare
 $username = strtolower($username);
 
+
 if(!validate_mail($username)) {
     mysqli_close($conn);
     echo "Indirizzo mail non corretto.";
@@ -52,5 +53,4 @@ if(! $reply = mysqli_query($conn, $query)) {
 }
 mysqli_close($conn);
 set_session_value($username);
-//todo: chiudere sessione
 echo "OK";

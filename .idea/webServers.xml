@@ -5,6 +5,14 @@
       <webServer id="cd393559-9a70-4901-8c7e-8241191c042e" name="xampp" url="http://localhost">
         <fileTransfer port="0" mountedRoot="/opt/lampp/htdocs" accessType="MOUNT" />
       </webServer>
+      <webServer id="5b2a8d27-f793-4c88-ae2b-11a9b765ead3" name="cclix11" url="http://cclix11.polito.it">
+        <fileTransfer host="cclix11.polito.it" port="21" rootFolder="/public_html/447ba0">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>
