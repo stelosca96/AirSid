@@ -250,11 +250,12 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     echo "<tr class='sedili'>";
                     for($y=1; $y<=$lunghezza; $y++){
                         $sID = $y.chr($x + 65);
+                        $sID_label = chr($x + 65).$y;
                         $checked = is_checked($sID, $res);
                         echo "<td><label class='container' id='cn" . $sID . "'>";
                         echo "<input type='checkbox' onclick='load_seat_state(\"$sID\")' name='reserved[]' value='$sID' id='$sID' $checked>\n";
                         $style = style_color($sID, $res);
-                        echo "<span " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID . "</span></label></td>\n";
+                        echo "<span " . $style . " class='checkmark' id='cm" . $sID . "'>" . $sID_label . "</span></label></td>\n";
                     }
                     echo "</tr>";
                 }
