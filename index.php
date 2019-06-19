@@ -87,7 +87,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     else{
         echo "<span class='menuBtn' id='user'>".$_SESSION['username']."</span>
               <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
-              <form action='index.php'>
+              <form action='index.php' method='post'>
               <button type='submit' name='action' class='menuBtn' value='refresh'>Aggiorna</button>
               <button type='submit' name='action' class='menuBtn' value='delete_reservations'>Cancella prenotazioni</button>
               </form>";
