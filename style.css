@@ -29,6 +29,9 @@ noscript{
     display: block;
     text-align: center;
     margin: 5px;
+    padding: 20px;
+    background-color: #262626;
+    border-radius: 5px;
 }
 
 .legend{

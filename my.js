@@ -4,6 +4,12 @@ function validate_password(password) {
 
 }
 
+function seat_label(sID) {
+    let sID_label = sID.match(/[a-z]+|[^a-z]+/gi);
+    console.log(sID_label[1] + sID_label[0])
+    return sID_label[1] + sID_label[0]
+}
+
 function validateEmail(email) {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/igm;
     return re.test(String(email).toLowerCase());
@@ -71,7 +77,7 @@ function validate_login() {
             //alert(data);
             //console.log(data);
             $("#alert_login").css("display", "block");
-            $("#login_error").text(JSON.stringify(data));
+            $("#login_error").text(data);
             return false;
         }
         else
@@ -223,11 +229,13 @@ function load_seat_state(sID) {
 
 
     function set_green(sID) {
+        let sID_label = seat_label(sID);
         $("#cm" + sID).css("background-color", "greenyellow").css("color", "white");
         delete seats[sID];
         count_seats();
         let prop = $("#" + sID).prop('checked', false).prop('checked');
-        console.log(sID + " " + prop);
+        console.log(sID_label + " " + prop);
+
     }
 
     let data = {};
@@ -241,22 +249,23 @@ function load_seat_state(sID) {
             console.log(data);
             set_gray(sID)
         }
+        let sID_label = seat_label(sID);
         switch (data) {
             case "busy":
                 set_red(sID);
-                set_notification("Il posto " + sID + " è occupato.");
+                set_notification("Il posto " + sID_label + " è occupato.");
                 break;
             case "reserved":
                 set_yellow(sID);
-                set_notification("Un altro utente aveva prenotato il posto " + sID + ".");
+                set_notification("Un altro utente aveva prenotato il posto " + sID_label + ".");
                 break;
             case "free":
                 set_green(sID);
-                set_notification("Hai liberato il posto " + sID + ".");
+                set_notification("Hai liberato il posto " + sID_label + ".");
                 break;
             case "my":
                 set_yellow(sID);
-                set_notification("Hai prenotato il posto " + sID + ".");
+                set_notification("Hai prenotato il posto " + sID_label + ".");
                 break;
         }
     })

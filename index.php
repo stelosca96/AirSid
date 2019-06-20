@@ -155,30 +155,6 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     <script>
 
         const modal = document.getElementsByClassName("modal")[0];
-
-        // $(`#loginBtn`).click(function() {
-        //     $('.modal').css("display", "block");
-        //     $('#modalLogin').css("display", "block");
-        //     $('#modalRegistrazione').css("display", "none");
-        //     $('#modalTitle').text("Login");
-        // });
-
-
-        // $(`#registrazioneBtn`).click(function() {
-        //     $('.modal').css("display", "block");
-        //     $('#modalLogin').css("display", "none");
-        //     $('#modalRegistrazione').css("display", "block");
-        //     $('#modalTitle').text("Registrazione");
-        // });
-
-
-
-        // $(`#close_modal`).click(function() {
-        //     $('.modal').css("display", "none");
-        //     $('#modalLogin').css("display", "none");
-        //     $('#modalRegistrazione').css("display", "none");
-        //     $('#modalTitle').text("Registrazione");
-        // });
         window.onclick = function(event) {
             if (event.target === modal) {
                 modal.style.display = "none";
@@ -195,7 +171,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     ?>
     <div id='alert_notification' class='alert'>
         <span id="close_notification" class='closebtn' onclick="this.parentElement.style.display='none';">&times;</span>
-        <span id="notification">Testo di prova</span>
+        <span id="notification"></span>
     </div>
     <?php
     if(isset($_REQUEST['action']) && $_REQUEST['action']=="booking")

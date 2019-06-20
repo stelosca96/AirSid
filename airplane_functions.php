@@ -50,15 +50,16 @@ function booking(){
         foreach ($reserved as $sID){
             //$sID = my_sanitize($sID);
             $sID = mysqli_real_escape_string($conn, $sID);
+            $sID_label = print_seat($sID);
             if(!validate_seat($sID))
-                throw new Exception("Il posto $sID non esiste");
+                throw new Exception("Il posto $sID_label non esiste");
             $query = "UPDATE seats SET state='busy'  WHERE id='$sID' AND user='$uID'";
             if(!mysqli_query($conn, $query))
                 throw new Exception("Query fallita");
             if($a=mysqli_affected_rows($conn)==0){
                 $query = "INSERT INTO seats(id, state, user) VALUES ('$sID', 'busy', '$uID')";
                 if(! $reply = mysqli_query($conn, $query)) {
-                    throw new Exception("Il posto $sID è assegnato ad un altro utente");
+                    throw new Exception("Il posto $sID_label è assegnato ad un altro utente");
                 }
             }
 

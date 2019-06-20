@@ -83,6 +83,13 @@ function validate_seat($sID){
 
 }
 
+function print_seat($sID){
+    $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$sID);
+    $riga = $arr[0];
+    $colonna = $arr[1];
+    return $colonna.$riga;
+}
+
 
 
 function inactivity(){
