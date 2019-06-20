@@ -42,10 +42,6 @@ function booking(){
     $conn = db_connect();
     try{
         mysqli_autocommit($conn,false);
-//        mysqli_begin_transaction($conn);
-//        $query = "SELECT * FROM seats WHERE user='$uID' FOR UPDATE ";
-//        if(!mysqli_query($conn,$query))
-//            throw new Exception("Query lock fallita");
 
         foreach ($reserved as $sID){
             //$sID = my_sanitize($sID);
@@ -129,6 +125,7 @@ function total_busy_reserved_count($length, $width, $values){
             $res["my"]++;
     }
     $res["free"] = $res["total"] - ($res["busy"]+$res["reserved"]+$res["my"]);
+    $res["reserved"] += $res["my"];
     return $res;
 }
 

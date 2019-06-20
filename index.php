@@ -50,6 +50,7 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
                     my++;
             }
             let free = total - busy - reserved - my;
+            reserved += my;
             $("#stats_busy").text(busy);
             $("#stats_reserved").text(reserved);
             $("#stats_my").text(my);
@@ -87,10 +88,13 @@ $stats = total_busy_reserved_count($larghezza, $lunghezza, $res);
     else{
         echo "<span class='menuBtn' id='user'>".$_SESSION['username']."</span>
               <button class='menuBtn' id='logoutBtn' onclick=\"window.location.href ='index.php?action=logout'\" >Logout</button>
+              <form action='index.php' method='get'>
+                  <button type='submit' name='action' class='menuBtn' value='refresh'>Aggiorna</button>
+              </form>
               <form action='index.php' method='post'>
-              <button type='submit' name='action' class='menuBtn' value='refresh'>Aggiorna</button>
-              <button type='submit' name='action' class='menuBtn' value='delete_reservations'>Cancella prenotazioni</button>
-              </form>";
+                  <button type='submit' name='action' class='menuBtn' value='delete_reservations'>Cancella prenotazioni</button>
+              </form>
+              ";
     }
     ?>
     <script>
